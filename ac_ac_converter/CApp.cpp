@@ -3,8 +3,15 @@
 
 #include "CApp.h"
 #include "mcu.h"
-
 #include "niietcm4_rcc.h"
+#include "modbus_regs.h"
+#include "modbus_config.h"
+#include "modbus_rtu.h"
+#include "modbus_scope.h"
+#include "clock.h"
+#include "gpio.h"
+
+
 
 
 const uint32_t SYSTEM_CLOCK = 100e6;
@@ -21,6 +28,10 @@ void CApp::init(){
     pwm_init();
     adc_init();
     
+    gpio_init();
+    modbus_regs_enter_password(modbus1_password);
+    modbus1_init();
+    
     __enable_irq();
 }
 
@@ -30,8 +41,16 @@ void CApp::run(){
 
     while (true){
         counting++;
-//        ledWORK.blinking_task(TIME_SEC(0.5/1000.0));
+        ledWORK.blinking_task(TIME_SEC(5.0));
+        modbus_rtu_task(); // on uart2
+        gpio_task();
     }
+}
+
+void CApp::isr(time_t _period){
+    clock_tick(_period);
+    modbus_scope_tick(_period);
+    uart_hw_task(); // here or in background loop
 }
 
 
@@ -219,7 +238,7 @@ void PWM0_IRQHandler(void){
     PWM_ITPendClear(NT_PWM0);
     
 //    app.ledWORK.state_get() ? app.ledWORK.clear() : app.ledWORK.set();
-    app.ledWORK.set();
+//    app.ledWORK.set();
     
 }
 
@@ -232,11 +251,15 @@ void ADC_SEQ0_IRQHandler(void){
     for (int i = 0; i < 11; i++){
       adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
     }
+    
+    app.isr(TIME_USEC(50));
 
     while (NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FSTAT != 0)
       NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;					  // Check AI FIFO
 
-    app.ledWORK.clear();
+//    app.ledWORK.clear();
 }
+
+
 
 

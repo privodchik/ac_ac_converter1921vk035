@@ -67,7 +67,7 @@ void TIMER_Cmd(NT_TIMER_TypeDef* TIMERx, FunctionalState State)
     assert_param(IS_TIMER_ALL_PERIPH(TIMERx));
     assert_param(IS_FUNCTIONAL_STATE(State));
 
-    TIMERx->CTRL_bit.ON = (uint32_t)State;
+    TIMERx->CTRL_bit.ON_ = (uint32_t)State;
 }
 
 /**

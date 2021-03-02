@@ -34,6 +34,17 @@ void main()
     app.run();
 }
 
+//-------------------------------------------------------------------
+void jump_to_bootloader(void)
+{
+    NVIC_SystemReset();
+}
+
+//-------------------------------------------------------------------
+void system_reset(void)
+{
+    NVIC_SystemReset();
+}
 
 
 

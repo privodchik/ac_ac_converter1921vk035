@@ -4,6 +4,16 @@
 #ifndef _CSYSTICK_H
 #define _CSYSTICK_H
 
+#include <ctime>
+#include "IPheriphery.h"
+
+class CSysTick : IPheriphery{
+    
+  public:
+    static time_t sysTickTimeMs;
+    
+};
+
 
 
 #endif //_CSYSTICK_H

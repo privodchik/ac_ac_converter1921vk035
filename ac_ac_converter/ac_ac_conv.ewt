@@ -2370,6 +2370,21 @@
         </settings>
     </configuration>
     <group>
+        <name>Eeprom</name>
+        <file>
+            <name>$PROJ_DIR$\eeprom\eeprom.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\eeprom\eeprom.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\eeprom\eeprom_dummy.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\eeprom\eeprom_dummy.h</name>
+        </file>
+    </group>
+    <group>
         <name>Electrical</name>
         <file>
             <name>$PROJ_DIR$\Electrical\CLED.cpp</name>
@@ -2395,6 +2410,78 @@
         <file>
             <name>$PROJ_DIR$\iqmath\IQmathLib.h</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNasin.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNatan2.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNatan2PU.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNcos.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNcosPU.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNdiv.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNexp.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNexp2.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNfrac.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNint.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNisqrt.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNmag.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNmpy.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNmpyI32frac.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNmpyI32int.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNrmpy.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNrsmpy.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNsin.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNsinPU.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNsqrt.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNtoD.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQNtoF.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQtables.S</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iar\IQxmpy.S</name>
+        </file>
     </group>
     <group>
         <name>MCU</name>
@@ -2411,10 +2498,127 @@
             <name>$PROJ_DIR$\MCU\CUART.cpp</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\MCU\gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\gpio.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\gpio_hw.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\gpio_hw.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\MCU\IPheriphery.cpp</name>
         </file>
         <file>
             <name>$PROJ_DIR$\MCU\mcu.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart1_gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart1_gpio.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart1_hw.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart1_hw_poll.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart2_gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart2_gpio.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart2_hw.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart2_hw_poll.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart_hw.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\uart_hw.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\watchdog.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\MCU\watchdog.h</name>
+        </file>
+    </group>
+    <group>
+        <name>Modbus</name>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus2_rtu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus2_rtu.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_config.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_config.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_config_cb.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_config_converter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_crc16.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_crc16.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_eeprom.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_eeprom.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_regs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_regs.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_regs_alias.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_regs_alias.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_rtu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_rtu.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_scope.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_scope.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\modbus_slave.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\str_utils.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\modbus\str_utils.h</name>
         </file>
     </group>
     <group>
@@ -2539,6 +2743,9 @@
     </file>
     <file>
         <name>$PROJ_DIR$\CApp.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\config.h</name>
     </file>
     <file>
         <name>$PROJ_DIR$\main.cpp</name>

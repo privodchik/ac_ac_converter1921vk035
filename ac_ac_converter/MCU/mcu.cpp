@@ -49,22 +49,24 @@ void CMCU::systick_config(){
 }
 
 
-#include "CApp.h"
-extern CApp app;
-
-
-void SysTick_Handler(void)
-{
-//    app.ledWORK.state_get() ? app.ledWORK.clear() : app.ledWORK.set();
-    
-    USE_ATOMIC_BLOCK;
-    ATOMIC_BLOCK_BEGIN;
-    {
-        if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
-            CMCU::nowTimeMs++;
-        }
-    }
-    ATOMIC_BLOCK_END;
-}
+//#include "CApp.h"
+//extern CApp app;
+//
+//
+//void SysTick_Handler(void)
+//{
+////    app.ledWORK.state_get() ? app.ledWORK.clear() : app.ledWORK.set();
+//    
+//    USE_ATOMIC_BLOCK;
+//    ATOMIC_BLOCK_BEGIN;
+//    {
+//        if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
+//            
+//            
+//            CMCU::nowTimeMs++;
+//        }
+//    }
+//    ATOMIC_BLOCK_END;
+//}
 
 

@@ -12,6 +12,7 @@
 #include "CUART.h"
 
 
+
 extern const uint32_t SYSTEM_CLOCK;
 
 class CApp{
@@ -27,6 +28,7 @@ class CApp{
     
     void init();
     void run();
+    void isr(time_t _period);
     
   private:
     void leds_init();
@@ -38,6 +40,7 @@ class CApp{
     friend void SysTick_Handler(void);
     friend void PWM0_IRQHandler(void);
     friend void ADC_SEQ0_IRQHandler(void);
+    
 };
 
 
