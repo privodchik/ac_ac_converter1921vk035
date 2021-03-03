@@ -1,6 +1,10 @@
 #ifndef MODBUS_REGS_ALIAS_H
 #define MODBUS_REGS_ALIAS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //-------------------------------------------------------------------
 #define MODBUS_REGS_ALIAS_ENABLE    0
 
@@ -44,5 +48,10 @@ extern MODBUS_REG_ALIAS * modbus_eeprom_regs_alias; // see modbus_config_alias.c
 extern uint16_t modbus_eeprom_regs_alias_count;
 
 #endif // MODBUS_REGS_ALIAS_ENABLE
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif // MODBUS_REGS_ALIAS_H

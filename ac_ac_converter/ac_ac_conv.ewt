@@ -2405,6 +2405,12 @@
             <name>$PROJ_DIR$\iqmath\iqmath.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\iqmath\iqmath_int32_mcu.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iqmath_int32_pc.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\iqmath\IQmathCPP.h</name>
         </file>
         <file>

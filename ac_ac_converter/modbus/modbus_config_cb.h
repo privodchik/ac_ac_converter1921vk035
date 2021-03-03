@@ -2,6 +2,11 @@
 #ifndef MODBUS_CONFIG_CB_H
 #define MODBUS_CONFIG_CB_H
 
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #include "mcu.h"
 #include "config.h"
 //#include "convertor_adc.h"
@@ -61,6 +66,11 @@ static uint16_t cmd_pwm_update(uint16_t *value)
 }
 
 #endif // MOTOR_ENABLE
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MODBUS_CONFIG_CB_H
 

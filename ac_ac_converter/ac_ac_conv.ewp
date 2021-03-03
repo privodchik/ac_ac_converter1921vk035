@@ -143,12 +143,12 @@
                 <option>
                     <name>FPU2</name>
                     <version>0</version>
-                    <state>4</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>NrRegs</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>NEON</name>
@@ -2161,10 +2161,22 @@
             <name>$PROJ_DIR$\iqmath\iqmath.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\iqmath\iqmath_int32_mcu.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iqmath_int32_pc.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\iqmath\IQmathCPP.h</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\iqmath\IQmathLib.h</name>
+            <excluded>
+                <configuration>Debug</configuration>
+            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\iqmath\iar\IQNasin.S</name>

@@ -1,7 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "IQmathLib.h"
+//#include "IQmathLib.h"
+
 
 
 //-------------------------------------------------------------------

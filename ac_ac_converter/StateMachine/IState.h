@@ -4,7 +4,8 @@
 #ifndef _ISTATE_H
 #define _ISTATE_H
 
-#include "IQmathLib.h"
+//#include "IQmathLib.h"
+#include "iqmath_int32_mcu.h"
 #include <cstdint>
 #include "pt.h"
 

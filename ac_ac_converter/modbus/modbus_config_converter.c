@@ -28,6 +28,8 @@ const MODBUS_REG _modbus_holding_regs[] =
         
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=system") // Общее состояние и команды системы
     ,ModbusReg(PROM_REG, UINT16_CB(modbus1_password, NULL, NULL), "password") // пароль на системные команды
+    ,ModbusReg(SRAM_REG, UINT16_RO(modbus_regs_mode), "access_mode") // режим доступа к регистрам modbus:
+        // 0 - пользовательский, 1 - инженерный, 	 2 - заводской      
 		
 };
 

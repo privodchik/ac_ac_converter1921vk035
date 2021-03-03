@@ -35,13 +35,12 @@ void CApp::init(){
     __enable_irq();
 }
 
-
-
 void CApp::run(){
+    
 
     while (true){
         counting++;
-        ledWORK.blinking_task(TIME_SEC(5.0));
+//        ledWORK.blinking_task(TIME_SEC(5.0));
         modbus_rtu_task(); // on uart2
         gpio_task();
     }
@@ -70,6 +69,7 @@ void CApp::leds_init(){
 
 void CApp::pwm_init(){
     
+//    const uint32_t PWM_MAX = 10000;  // 10kHz
     const uint32_t PWM_MAX = 5000;  // 20kHz
 //    const uint32_t PWM_MAX = 2500;   //40kHz
     
@@ -83,7 +83,7 @@ void CApp::pwm_init(){
     PWM_CTR_StructInit(&PWM_CTR_InitStruct);
     PWM_CTR_InitStruct.PWM_ChAction_CTREqZero_A =  PWM_ChAction_ToZero;
     PWM_CTR_InitStruct.PWM_CTR_Mode = PWM_CTR_Mode_UpDown;
-    PWM_CTR_InitStruct.PWM_Period = PWM_MAX/2-1;
+    PWM_CTR_InitStruct.PWM_Period = PWM_MAX/2 - 1;
     PWM_CTR_InitStruct.PWM_CTR_SyncOut = PWM_CTR_SyncOut_CTREqZero;
     PWM_CTR_Init(NT_PWM0, &PWM_CTR_InitStruct);
 
@@ -164,11 +164,11 @@ void CApp::pwm_init(){
     PWM_ET_Cmd(NT_PWM0, PWM_ET_Channel_A, ENABLE);
     
     
-    PWM_CMP_SetA(NT_PWM0, PWM_MAX/4-1);
-    PWM_CMP_SetB(NT_PWM0, PWM_MAX/4-1);
+    PWM_CMP_SetA(NT_PWM0, PWM_MAX/4);
+    PWM_CMP_SetB(NT_PWM0, PWM_MAX/4);
     
-    PWM_CMP_SetA(NT_PWM1, PWM_MAX/4-1);
-    PWM_CMP_SetB(NT_PWM1, PWM_MAX/4-1);
+    PWM_CMP_SetA(NT_PWM1, PWM_MAX/4);
+    PWM_CMP_SetB(NT_PWM1, PWM_MAX/4);
     
     PWM_PrescCmd(PWM_Presc_0 | PWM_Presc_1, ENABLE);
     
@@ -237,8 +237,7 @@ void PWM0_IRQHandler(void){
     PWM_ITStatusClear(NT_PWM0);
     PWM_ITPendClear(NT_PWM0);
     
-//    app.ledWORK.state_get() ? app.ledWORK.clear() : app.ledWORK.set();
-//    app.ledWORK.set();
+    app.ledWORK.set();
     
 }
 
@@ -252,12 +251,13 @@ void ADC_SEQ0_IRQHandler(void){
       adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
     }
     
+    
     app.isr(TIME_USEC(50));
 
     while (NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FSTAT != 0)
       NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;					  // Check AI FIFO
 
-//    app.ledWORK.clear();
+    app.ledWORK.clear();
 }
 
 

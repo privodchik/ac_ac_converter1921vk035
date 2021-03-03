@@ -471,7 +471,6 @@ _IQ12mpy
     // Make sure that the end of the section is word aligned.
     //
     alignrom 2
-   
 
 //*****************************************************************************
 //
