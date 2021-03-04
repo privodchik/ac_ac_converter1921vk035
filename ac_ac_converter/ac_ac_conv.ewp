@@ -2260,6 +2260,9 @@
             <name>$PROJ_DIR$\MCU\CPin.cpp</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\MCU\CPWM.cpp</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\MCU\CSysTick.cpp</name>
         </file>
         <file>
@@ -2409,14 +2412,17 @@
     </group>
     <group>
         <name>StateMachine</name>
-        <excluded>
-            <configuration>Debug</configuration>
-        </excluded>
         <file>
             <name>$PROJ_DIR$\StateMachine\CInit.cpp</name>
         </file>
         <file>
             <name>$PROJ_DIR$\StateMachine\CInit.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CReady.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CReady.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\StateMachine\IState.cpp</name>
@@ -2426,9 +2432,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\StateMachine\state_machine.cpp</name>
-            <excluded>
-                <configuration>Debug</configuration>
-            </excluded>
         </file>
         <file>
             <name>$PROJ_DIR$\StateMachine\state_machine.h</name>
@@ -2517,6 +2520,9 @@
     </file>
     <file>
         <name>$PROJ_DIR$\CApp.h</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\config.cpp</name>
     </file>
     <file>
         <name>$PROJ_DIR$\config.h</name>

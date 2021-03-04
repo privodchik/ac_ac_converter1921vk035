@@ -10,6 +10,13 @@
 #include "CLed.h"
 #include "CADC.h"
 #include "CUART.h"
+#include "CPWM.h"
+
+
+#include "CInit.h"
+#include "CReady.h"
+
+#include "state_machine.h"
 
 
 
@@ -22,6 +29,17 @@ class CApp{
     CLed ledWORK;
     CADC adc{adc_modules, array_size(adc_modules)};
     CUart mbUart;
+    CPWM pwm_A{CPWM::ePWM::PWM_0};
+    CPWM pwm_B{CPWM::ePWM::PWM_1};
+    
+    CInit       stInit;
+    CReady      stReady;
+    
+    static const int numStates = 7;
+    IState* states[numStates];
+    
+    CStateMachine sm{&stInit};
+    
     
   public:
     CApp();
@@ -35,6 +53,7 @@ class CApp{
     void pwm_init();
     void adc_init();
     void uart_init();
+    void state_machine_init();
     
     
     friend void SysTick_Handler(void);

@@ -20,6 +20,8 @@ class CInit : public IState
 		
 	public:
 		virtual void reset();
+                
+//                time_t (CInit::*ptrFunc)() = &CInit::time_in_state_est;
 	
 	private:
 		PT pt_wait;

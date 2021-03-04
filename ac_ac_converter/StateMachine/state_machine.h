@@ -8,28 +8,24 @@
 
 class CStateMachine
 {
-  public:
-    enum eState{
-          INIT = 0,
-          CHARGE,
-          READY,
-          PRERUN,
-          RUN,
-          FAULT,
-          DIAG
-	};
-		
   private:		
-//      const IState* states[]
-			
+    
   private:
-      eState m_current_state;
       IState* m_ptr_current_state;
-				
 		
   public:
-      CStateMachine(){}
-      void state_set(eState _state);
+    CStateMachine(IState* _pInitState) : m_ptr_current_state(_pInitState){}
+    void state_set(IState::eState _state);
+    
+    void operate(){
+        m_ptr_current_state->operate();
+    }
+    
+    void critical_opertate(){
+        m_ptr_current_state->critical_operate();
+    }
 };
+
+
 
 #endif //_STATE_MACHINE_H

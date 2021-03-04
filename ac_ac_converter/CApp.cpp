@@ -10,14 +10,18 @@
 #include "modbus_scope.h"
 #include "clock.h"
 #include "gpio.h"
+#include "config.h"
 
 
 
-
-const uint32_t SYSTEM_CLOCK = 100e6;
 
 CApp::CApp(){
+    states[0]= &stInit;
+    states[1]= &stReady;
+    IState::states_array_register(states);
 }
+
+static const uint32_t SYSTEM_CLOCK = 100000000;
 
 void CApp::init(){
     CMCU(SYSTEM_CLOCK).init();
@@ -35,14 +39,19 @@ void CApp::init(){
     __enable_irq();
 }
 
+
 void CApp::run(){
     
-
     while (true){
+        
+//        (stInit.stInit.*ptrFunc)();
+        
         counting++;
 //        ledWORK.blinking_task(TIME_SEC(5.0));
         modbus_rtu_task(); // on uart2
         gpio_task();
+        
+        sm.operate();
     }
 }
 
@@ -69,9 +78,10 @@ void CApp::leds_init(){
 
 void CApp::pwm_init(){
     
-//    const uint32_t PWM_MAX = 10000;  // 10kHz
-    const uint32_t PWM_MAX = 5000;  // 20kHz
-//    const uint32_t PWM_MAX = 2500;   //40kHz
+    pwm_A.freq_set(FREQ_KHZ);
+    pwm_B.freq_set(FREQ_KHZ);
+    
+    const uint32_t PWM_MAX = pwm_A.freq_in_ticks_get(); // or pwm_B.freq_in_ticks_get()
     
     RCC_PeriphClkCmd(RCC_PeriphClk_PWM0, ENABLE);
     RCC_PeriphRstCmd(RCC_PeriphRst_PWM0, ENABLE);
@@ -164,11 +174,9 @@ void CApp::pwm_init(){
     PWM_ET_Cmd(NT_PWM0, PWM_ET_Channel_A, ENABLE);
     
     
-    PWM_CMP_SetA(NT_PWM0, PWM_MAX/4);
-    PWM_CMP_SetB(NT_PWM0, PWM_MAX/4);
     
-    PWM_CMP_SetA(NT_PWM1, PWM_MAX/4);
-    PWM_CMP_SetB(NT_PWM1, PWM_MAX/4);
+    pwm_A.out_disable();
+    pwm_B.out_disable();    
     
     PWM_PrescCmd(PWM_Presc_0 | PWM_Presc_1, ENABLE);
     
@@ -228,6 +236,9 @@ void CApp::uart_init(){
     
 }
 
+
+void CApp::state_machine_init(){
+}
 
 
 extern CApp app;
