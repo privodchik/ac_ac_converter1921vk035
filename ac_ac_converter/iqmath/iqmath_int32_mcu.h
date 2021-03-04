@@ -1,4 +1,4 @@
-// auto-generated file 04.09.2016 22:58:56
+// auto-generated file 04.03.2021 08:49:32
 #ifndef IQMATH_INT32_MCU_H
 #define IQMATH_INT32_MCU_H
 
@@ -51,7 +51,6 @@ typedef int32_t iq_t;
 #define IQ_MIN_INT      (int32_t)(-((int32_t)1<<10))
 
 #define IQ(A)           IQ21(A)
-
 #define IQ2INT(A)       ((A)>>Q_GLOBAL)
 #define IQ2FLOAT(A)     IQ21toF(A)
 
@@ -301,69 +300,37 @@ extern iq21_t _IQ21abs(iq21_t x);
 #define IQ0div(A,B)     (iq_t)(((int64_t)(A)<<0) / (B))
 
 //-------------------------------------------------------------------
-extern float _IQ30toF(iq30_t A);
-extern float _IQ29toF(iq29_t A);
-extern float _IQ28toF(iq28_t A);
-extern float _IQ27toF(iq27_t A);
-extern float _IQ26toF(iq26_t A);
-extern float _IQ25toF(iq25_t A);
-extern float _IQ24toF(iq24_t A);
-extern float _IQ23toF(iq23_t A);
-extern float _IQ22toF(iq22_t A);
-extern float _IQ21toF(iq21_t A);
-extern float _IQ20toF(iq20_t A);
-extern float _IQ19toF(iq19_t A);
-extern float _IQ18toF(iq18_t A);
-extern float _IQ17toF(iq17_t A);
-extern float _IQ16toF(iq16_t A);
-extern float _IQ15toF(iq15_t A);
-extern float _IQ14toF(iq14_t A);
-extern float _IQ13toF(iq13_t A);
-extern float _IQ12toF(iq12_t A);
-extern float _IQ11toF(iq11_t A);
-extern float _IQ10toF(iq10_t A);
-extern float _IQ9toF(iq9_t A);
-extern float _IQ8toF(iq8_t A);
-extern float _IQ7toF(iq7_t A);
-extern float _IQ6toF(iq6_t A);
-extern float _IQ5toF(iq5_t A);
-extern float _IQ4toF(iq4_t A);
-extern float _IQ3toF(iq3_t A);
-extern float _IQ2toF(iq2_t A);
-extern float _IQ1toF(iq1_t A);
-extern float _IQ0toF(iq0_t A);
-
-#define IQ30toF(A)      _IQ30toF(A)
-#define IQ29toF(A)      _IQ29toF(A)
-#define IQ28toF(A)      _IQ28toF(A)
-#define IQ27toF(A)      _IQ27toF(A)
-#define IQ26toF(A)      _IQ26toF(A)
-#define IQ25toF(A)      _IQ25toF(A)
-#define IQ24toF(A)      _IQ24toF(A)
-#define IQ23toF(A)      _IQ23toF(A)
-#define IQ22toF(A)      _IQ22toF(A)
-#define IQ21toF(A)      _IQ21toF(A)
-#define IQ20toF(A)      _IQ20toF(A)
-#define IQ19toF(A)      _IQ19toF(A)
-#define IQ18toF(A)      _IQ18toF(A)
-#define IQ17toF(A)      _IQ17toF(A)
-#define IQ16toF(A)      _IQ16toF(A)
-#define IQ15toF(A)      _IQ15toF(A)
-#define IQ14toF(A)      _IQ14toF(A)
-#define IQ13toF(A)      _IQ13toF(A)
-#define IQ12toF(A)      _IQ12toF(A)
-#define IQ11toF(A)      _IQ11toF(A)
-#define IQ10toF(A)      _IQ10toF(A)
-#define IQ9toF(A)       _IQ9toF(A)
-#define IQ8toF(A)       _IQ8toF(A)
-#define IQ7toF(A)       _IQ7toF(A)
-#define IQ6toF(A)       _IQ6toF(A)
-#define IQ5toF(A)       _IQ5toF(A)
-#define IQ4toF(A)       _IQ4toF(A)
-#define IQ3toF(A)       _IQ3toF(A)
-#define IQ2toF(A)       _IQ2toF(A)
-#define IQ1toF(A)       _IQ1toF(A)
-#define IQ0toF(A)       _IQ0toF(A)
+#define IQ30toF(A)      ((float)(A)*(9.313226e-10))
+#define IQ29toF(A)      ((float)(A)*(1.862645e-09))
+#define IQ28toF(A)      ((float)(A)*(3.72529e-09))
+#define IQ27toF(A)      ((float)(A)*(7.450581e-09))
+#define IQ26toF(A)      ((float)(A)*(1.490116e-08))
+#define IQ25toF(A)      ((float)(A)*(2.980232e-08))
+#define IQ24toF(A)      ((float)(A)*(5.960464e-08))
+#define IQ23toF(A)      ((float)(A)*(1.192093e-07))
+#define IQ22toF(A)      ((float)(A)*(2.384186e-07))
+#define IQ21toF(A)      ((float)(A)*(4.768372e-07))
+#define IQ20toF(A)      ((float)(A)*(9.536743e-07))
+#define IQ19toF(A)      ((float)(A)*(1.907349e-06))
+#define IQ18toF(A)      ((float)(A)*(3.814697e-06))
+#define IQ17toF(A)      ((float)(A)*(7.629395e-06))
+#define IQ16toF(A)      ((float)(A)*(1.525879e-05))
+#define IQ15toF(A)      ((float)(A)*(3.051758e-05))
+#define IQ14toF(A)      ((float)(A)*(6.103516e-05))
+#define IQ13toF(A)      ((float)(A)*(0.0001220703))
+#define IQ12toF(A)      ((float)(A)*(0.0002441406))
+#define IQ11toF(A)      ((float)(A)*(0.0004882813))
+#define IQ10toF(A)      ((float)(A)*(0.0009765625))
+#define IQ9toF(A)       ((float)(A)*(0.001953125))
+#define IQ8toF(A)       ((float)(A)*(0.00390625))
+#define IQ7toF(A)       ((float)(A)*(0.0078125))
+#define IQ6toF(A)       ((float)(A)*(0.015625))
+#define IQ5toF(A)       ((float)(A)*(0.03125))
+#define IQ4toF(A)       ((float)(A)*(0.0625))
+#define IQ3toF(A)       ((float)(A)*(0.125))
+#define IQ2toF(A)       ((float)(A)*(0.25))
+#define IQ1toF(A)       ((float)(A)*(0.5))
+#define IQ0toF(A)       ((float)(A)*(1))
 
 
 #endif /* IQMATH_INT32_MCU_H */

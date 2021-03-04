@@ -1,4 +1,4 @@
-// auto-generated file 04.09.2016 22:58:53
+// auto-generated file 02.12.2018 12:41:52
 #ifndef IQMATH_INT32_PC_H
 #define IQMATH_INT32_PC_H
 
@@ -56,7 +56,6 @@ typedef int32_t iq_t;
 #define IQ_MIN_INT      (int32_t)(-((int32_t)1<<10))
 
 #define IQ(A)           IQ21(A)
-
 #define IQ2INT(A)       ((A)>>Q_GLOBAL)
 #define IQ2FLOAT(A)     IQ21toF(A)
 
