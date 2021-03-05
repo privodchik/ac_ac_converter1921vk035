@@ -3,6 +3,10 @@
 
 #include "IState.h"
 
+#include "CApp.h"
+extern CApp app;
+
+
 IState* IState::m_ptr_current_state;
 IState::eState IState::m_current_state;
 

@@ -16,6 +16,13 @@
 
 
 CApp::CApp(){
+    
+    sensors[0] = &sens_iFull;
+    sensors[1] = &sens_iLoad;
+    sensors[2] = &sens_uBUSP_N;
+    sensors[3] = &sens_uBUSN_N;
+    sensors[4] = &sens_uOut;
+    
     states[0]= &stInit;
     states[1]= &stReady;
     IState::states_array_register(states);
@@ -56,6 +63,7 @@ void CApp::run(){
 }
 
 void CApp::isr(time_t _period){
+    sm.critical_operate();
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
@@ -258,8 +266,16 @@ void ADC_SEQ0_IRQHandler(void){
  
     ADC_SEQ_ITStatusClear(ADC_SEQ_Module_0);
     
-    for (int i = 0; i < 11; i++){
-      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
+    
+//    for (int i = 0; i < 11; i++){
+//      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
+//    }
+    
+    
+    for (int i = 0; i < array_size(adc_modules); i++){
+        uint16_t _res = static_cast<uint16_t>(NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA);
+        adc_modules[i].write(_res);
+        app.sensors[i]->adc_val_set(_res);
     }
     
     

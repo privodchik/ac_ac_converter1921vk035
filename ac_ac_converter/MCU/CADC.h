@@ -17,18 +17,23 @@ class CADCModule
   private:
     int m_id;
     uint32_t m_clkDiv;
+    uint16_t m_result;
 
   public:
     CADCModule(){}
     CADCModule(int _id, uint32_t _clkDiv) :
       m_id(_id),
-      m_clkDiv(_clkDiv)
+      m_clkDiv(_clkDiv),
+      m_result(0)
     {}
 
     void clk_div_set(uint32_t _clkDiv){m_clkDiv = _clkDiv;}
     uint32_t clk_div_get() const {return m_clkDiv;}
 
     int id_get(){return m_id;}
+    
+    uint16_t read() const {return m_result;}
+    void write(uint16_t _res) {m_result = _res;}
 };
 
 extern CADCModule adc_modules[11];

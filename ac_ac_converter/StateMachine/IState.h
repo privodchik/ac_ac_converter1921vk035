@@ -30,6 +30,13 @@ class IState
       static eState m_current_state;
       static IState* m_ptr_current_state;
       
+    public:
+      static const eState& state_current_get(){
+          return m_current_state;
+      }
+      
+        
+    protected:
       static const uint8_t STATES_QUANTITY;  
     
     public:

@@ -372,6 +372,7 @@
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\modbus</state>
                     <state>$PROJ_DIR$\eeprom</state>
+                    <state>$PROJ_DIR$\Electrical\Sensors</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2142,18 +2143,42 @@
     </group>
     <group>
         <name>Electrical</name>
-        <file>
-            <name>$PROJ_DIR$\Electrical\CLED.cpp</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Electrical\CLED.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Electrical\ILed.cpp</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\Electrical\ILed.h</name>
-        </file>
+        <group>
+            <name>Leds</name>
+            <file>
+                <name>$PROJ_DIR$\Electrical\CLED.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\CLED.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\ILed.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\ILed.h</name>
+            </file>
+        </group>
+        <group>
+            <name>Sensors</name>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\CSensI.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\CSensI.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\CSensU.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\CSensU.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\ISens.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\Electrical\Sensors\ISens.h</name>
+            </file>
+        </group>
     </group>
     <group>
         <name>iqmath</name>
@@ -2344,7 +2369,7 @@
             <name>$PROJ_DIR$\modbus\modbus_config_cb.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\modbus\modbus_config_converter.c</name>
+            <name>$PROJ_DIR$\modbus\modbus_config_converter.cpp</name>
         </file>
         <file>
             <name>$PROJ_DIR$\modbus\modbus_crc16.c</name>

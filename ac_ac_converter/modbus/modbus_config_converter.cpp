@@ -2,6 +2,9 @@
 #include "modbus_config_cb.h"
 #include "modbus_config.h"
 
+#include "CApp.h"
+extern CApp app;
+
 
 //-------------------------------------------------------------------
 const char modbus_slave_id[] = NAME_STR " " POWER_STR
@@ -10,6 +13,8 @@ const char modbus_slave_id[] = NAME_STR " " POWER_STR
 uint16_t modbus_slave_id_len = countof(modbus_slave_id);
 
 //-------------------------------------------------------------------
+
+
 const MODBUS_REG _modbus_holding_regs[] =
 {
      ModbusReg(SRAM_REG, RESERVED_, "GROUP=modbus") // Настройки Modbus
@@ -30,8 +35,29 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(PROM_REG, UINT16_CB(modbus1_password, NULL, NULL), "password") // пароль на системные команды
     ,ModbusReg(SRAM_REG, UINT16_RO(modbus_regs_mode), "access_mode") // режим доступа к регистрам modbus:
         // 0 - пользовательский, 1 - инженерный, 	 2 - заводской      
-		
+    ,ModbusReg(SRAM_REG, UINT16_RO(IState::state_current_get()), "state")  
+        
+   ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iLoad.scale_get(), QG, Q14), "iLoad[A/dig]")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSP_N.scale_get(), QG, Q9), "uBusPN[V/dig]")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSN_N.scale_get(), QG, Q9), "uBusNN[V/dig]")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uOut.scale_get(), QG, Q9), "uOut[V/dig]")
+       
+   ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iFull.read(), QG, Q5), "iacN[A]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iLoad.read(), QG, Q5), "iacP[A]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSP_N.read(), QG, Q5), "uBusPN[V]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uOut.read(), QG, Q5), "uOut[V]")
 };
+
+
+static void func(){
+    
+    
+}
+
 
 
 const MODBUS_REG * modbus_holding_regs = _modbus_holding_regs;
