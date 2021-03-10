@@ -6,7 +6,7 @@
 #define _ISENS_H
 
 #include "iqmath.h"
-
+#include "system_K1921VK01T.h"
 
 // resistances in kOhm 
 #define Uref (3.3)
@@ -35,7 +35,7 @@ class ISens{
   
   protected:
     iq_t        m_kD2A = 0;
-    uint16_t    m_adcOffset = 0;
+    int16_t     m_adcOffset = 0;
     iq_t        m_realVal = 0;
     iq_t        m_RealOffsetDelta = 0;
     bool        m_inversion = false;
@@ -43,17 +43,31 @@ class ISens{
   public:
     constexpr ISens(){}
     virtual ~ISens() = 0;
-    const iq_t& read()const;
+    #pragma inline = forced
+    const iq_t& read()const{return m_realVal;}
+    
     void adc_val_set(uint16_t _adcVal);
+    
+    #pragma inline = forced    
+    void real_val_set(uint16_t _realVal){m_realVal = _realVal;}
+    
     void offset_set(iq_t _realOffset){m_RealOffsetDelta = _realOffset;}
     void inversion(bool _isInv){m_inversion = _isInv;}
     
+    #pragma inline = forced
     const iq_t& scale_get()const{return m_kD2A;}
+    
+    
+    friend void ADC_SEQ0_IRQHandler(void);
 };
 
 
-inline const iq_t& ISens::read() const{
-    return m_realVal;
+//#pragma inline = forced
+inline void ISens::adc_val_set(uint16_t _adcVal){
+    iq_t _realVal = m_kD2A * (_adcVal - m_adcOffset);
+    _realVal -= m_RealOffsetDelta;
+    m_realVal = m_inversion ?  -_realVal : _realVal;
 }
+
 
 #endif //_ISENS_H

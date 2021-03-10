@@ -11,7 +11,6 @@ class CInit : public IState
 	public:
 		CInit() : IState(INIT){}
 			
-			
 		virtual void critical_protect();
 		virtual void non_critical_protect();
 		

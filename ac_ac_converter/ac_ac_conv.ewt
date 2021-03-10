@@ -2403,6 +2403,33 @@
         </group>
         <group>
             <name>Sensors</name>
+            <group>
+                <name>Sensors_FLOAT</name>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.cpp</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensU.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.cpp</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.h</name>
+                </file>
+            </group>
+            <group>
+                <name>Sensors_Template</name>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\TCSensI.h</name>
+                </file>
+                <file>
+                    <name>$PROJ_DIR$\Electrical\Sensors\TISens.h</name>
+                </file>
+            </group>
             <file>
                 <name>$PROJ_DIR$\Electrical\Sensors\CSensI.cpp</name>
             </file>
@@ -2427,6 +2454,9 @@
         <name>iqmath</name>
         <file>
             <name>$PROJ_DIR$\iqmath\iqmath.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\iqmath\iqmath_float32.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\iqmath\iqmath_int32_mcu.h</name>
@@ -2675,6 +2705,18 @@
     <group>
         <name>StateMachine</name>
         <file>
+            <name>$PROJ_DIR$\StateMachine\CCharge.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CCharge.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CFault.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CFault.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\StateMachine\CInit.cpp</name>
         </file>
         <file>
@@ -2745,6 +2787,39 @@
         </file>
     </group>
     <group>
+        <name>TF</name>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\filter.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\filter.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\integrator.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\integrator.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\itrans_func.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\itrans_func.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\piregulator.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\piregulator.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\prop_reg.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\TransferFunc\prop_reg.h</name>
+        </file>
+    </group>
+    <group>
         <name>Time</name>
         <file>
             <name>$PROJ_DIR$\time\clock.c</name>
@@ -2775,6 +2850,15 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Utility\c_lang_adapter.h</name>
+        </file>
+    </group>
+    <group>
+        <name>WorkClasses</name>
+        <file>
+            <name>$PROJ_DIR$\WorkClasses\CErrors.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\WorkClasses\CErrors.h</name>
         </file>
     </group>
     <file>

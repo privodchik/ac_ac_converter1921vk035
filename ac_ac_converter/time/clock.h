@@ -14,6 +14,7 @@ time_t clock_time(void);
 
 void clock_tick(time_t period); // call it from isr
 
+
 #ifdef __cplusplus
 } //extern "C"
 #endif

@@ -45,6 +45,7 @@ extern void SystemInit(void);
 // Updates the SystemCoreClock with current core Clock retrieved from registers
 extern void SystemCoreClockUpdate(void);
 extern void ClkInit(void);
+extern void FPUInit();
 
 //#if defined (__CMCPPARM__)
 void NMI_Handler(void);           /* NMI Handler */

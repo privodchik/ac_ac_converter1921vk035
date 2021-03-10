@@ -20,9 +20,9 @@ IState::~IState(){}
 void IState::state_set(eState _state){
 	
 	m_current_state = _state;
+        m_ptr_current_state = m_pStatesArray[_state];
 
 	if (_state != m_state){
-		m_ptr_current_state = m_pStatesArray[_state];
 		m_ptr_current_state->reset();
 	}		
 	
@@ -35,6 +35,10 @@ void IState::non_critical_protect(){
 }
 
 void IState::critical_operate(){
+    if (IState::m_current_state == IState::eState::RUN){
+        app.pwm_A.out_disable();
+        app.pwm_B.out_disable();
+    }
 }
 
 void IState::operate(){

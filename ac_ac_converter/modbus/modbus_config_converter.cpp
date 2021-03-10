@@ -53,12 +53,6 @@ const MODBUS_REG _modbus_holding_regs[] =
 };
 
 
-static void func(){
-    
-    
-}
-
-
 
 const MODBUS_REG * modbus_holding_regs = _modbus_holding_regs;
 uint16_t modbus_holding_regs_count = (sizeof(_modbus_holding_regs) / sizeof(_modbus_holding_regs[0]));

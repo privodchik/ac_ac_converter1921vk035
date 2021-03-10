@@ -5,6 +5,9 @@
 #include "CApp.h"
 
 
+#include "CApp.h"
+extern CApp app;
+
 void CInit::critical_protect(){
 	IState::critical_protect();	
 }
@@ -14,6 +17,7 @@ void CInit::non_critical_protect(){
 }
 
 void CInit::critical_operate(){
+    IState::critical_operate();
 }
 
 void CInit::operate(){
@@ -34,6 +38,7 @@ char CInit::task_wait(PT* pt){
 	
 	PT_YIELD_UNTIL(pt, timer_expired(&tmr));
         IState::state_set(IState::CHARGE);
+        return PT_EXITED;
 	
 	PT_END(pt);
 }

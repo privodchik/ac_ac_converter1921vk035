@@ -34,6 +34,8 @@ void CMCU::init(){
     SystemCoreClockUpdate();
     systick_config();
 
+    FPUInit();
+    
     __enable_irq();
     
 }

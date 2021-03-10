@@ -3,12 +3,14 @@
 
 #include "CReady.h"
 
+#include "CApp.h"
+extern CApp app;
+
 
 void CReady::critical_protect(){
-//	app.pwmN.out_disable();
-//	app.pwmP.out_disable();
+
 	
-	IState::critical_protect();	
+    IState::critical_protect();	
 }
 
 void CReady::non_critical_protect(){
@@ -16,7 +18,7 @@ void CReady::non_critical_protect(){
 }
 
 void CReady::critical_operate(){
-	
+    IState::critical_operate();
 }
 
 void CReady::operate(){

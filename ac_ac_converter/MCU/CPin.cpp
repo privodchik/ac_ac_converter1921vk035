@@ -22,19 +22,9 @@ CPin::CPin(ePort _port, ePin _pin) : m_pin(_pin), IPheriphery(){
     
 }
 
-
 void CPin::port_set(ePort _port){
     m_portName = _port;
     m_port = mcuPortsArray[int(_port)];
-}
-
-void CPin::write(bool _state){
-    GPIO_WriteBit(m_port, uint32_t(m_pin), _state ? Bit_SET :  Bit_CLEAR);
-}
-
-bool CPin::read(){
-    return static_cast<bool>
-        ( GPIO_ReadBit(m_port, static_cast<uint32_t>(m_pin)) );
 }
 
 void CPin::config_set(){

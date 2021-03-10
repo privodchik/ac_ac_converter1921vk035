@@ -2,14 +2,13 @@
 // User: ID
 
 #include "CCharge.h"
-#include "app_lgm.h"
 
-//#define USE_DIAGNOSTIC
+#include "CApp.h"
+extern CApp app;
+
+#define USE_DIAGNOSTIC
 
 void CCharge::critical_protect(){
-	app.pwmN.out_disable();
-	app.pwmP.out_disable();
-	
 	IState::critical_protect();	
 }
 
@@ -18,6 +17,7 @@ void CCharge::non_critical_protect(){
 }
 
 void CCharge::critical_operate(){
+    IState::critical_operate();
 }
 
 void CCharge::operate(){
@@ -36,23 +36,24 @@ char CCharge::task_charge(PT* pt){
 	
 	PT_BEGIN(pt);
 	timer_set(&tmr, TIME_SEC(30));
-	app.km_charge.set(CPin::OFF);
-	
+
 	PT_YIELD(pt);
 
 #ifndef USE_DIAGNOSTIC	
 	if (!timer_expired(&tmr)){
 		
-		if (app.sensUdcNet.m_real >= UNET_MIN){
-			app.km_charge.set(CPin::ON);
-			IState::state_set(IState::READY);
+		if (    (app.sens_uBUSP_N.read() >= UBUSPN_MIN)
+                    &&  (app.sens_uBUSN_N.read() >= UBUSNN_MIN)
+                    )
+                {
+                    IState::state_set(IState::eState::READY);
 			return PT_ENDED;
 		}
 		return PT_EXITED;
 	}
-	
-	app.errors.set(CErrors::CHARGE_PRECHARGE);
-	IState::state_set(IState::FAULT);
+        
+	app.errors.set(CErrors::ERROR_BUS_MIN);
+	IState::state_set(IState::eState::FAULT);
 #else
 	timer_set(&tmr, TIME_SEC(5));
 	PT_WAIT_UNTIL(pt, timer_expired(&tmr));

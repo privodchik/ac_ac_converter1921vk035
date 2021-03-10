@@ -2,11 +2,13 @@
 // User: ID
 
 #include "CFault.h"
-#include "app_lgm.h"
+
+#include "CApp.h"
+extern CApp app;
 
 void CFault::critical_protect(){
-	app.pwmN.out_disable();
-	app.pwmP.out_disable();
+//	app.pwmN.out_disable();
+//	app.pwmP.out_disable();
 	
 	IState::critical_protect();	
 }
@@ -20,14 +22,14 @@ void CFault::critical_operate(){
 
 void CFault::operate(){
 	IState::operate();
-	app.cmds.start = 0;
-	if (app.cmds.rst){
-		app.cmds.rst = 0;
-		IState::state_set(IState::INIT);
-	}
+//	app.cmds.start = 0;
+//	if (app.cmds.rst){
+//		app.cmds.rst = 0;
+//		IState::state_set(IState::INIT);
+//	}
 }
 
 void CFault::reset(){
-	app.pwmN.out_disable();
-	app.pwmP.out_disable();
+//	app.pwmN.out_disable();
+//	app.pwmP.out_disable();
 }

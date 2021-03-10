@@ -28,11 +28,16 @@ class ILed
       explicit ILed(const CPin& _pin);
       virtual ~ILed() = 0;
       
+      #pragma inline = forced
       void define_pin(const CPin& _pin){m_pin = _pin;}
       
+      #pragma inline = forced
       void set(){m_pin.write(true); m_state = true;}
+      
+      #pragma inline = forced
       void clear(){m_pin.write(false); m_state = false;}
       
+      #pragma inline = forced
       bool state_get(){return m_state;}
       
     
@@ -50,6 +55,9 @@ class ILed
       
       
 };
+
+//#pragma inline = forced
+//inline void ILed::define_pin(const CPin& _pin){m_pin = _pin;}
 
 #endif
 

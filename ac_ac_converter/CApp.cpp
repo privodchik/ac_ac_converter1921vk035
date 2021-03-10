@@ -13,6 +13,8 @@
 #include "config.h"
 
 
+const int ERRORS_BUFFER_SIZE = 5;
+CErrors::eError_t errorBuffer[ERRORS_BUFFER_SIZE]; 
 
 
 CApp::CApp(){
@@ -23,8 +25,10 @@ CApp::CApp(){
     sensors[3] = &sens_uBUSN_N;
     sensors[4] = &sens_uOut;
     
-    states[0]= &stInit;
-    states[1]= &stReady;
+    states[IState::eState::INIT]= &stInit;
+    states[IState::eState::CHARGE]= &stCharge;
+    states[IState::eState::READY]= &stReady;
+    states[IState::eState::FAULT]= &stFault;
     IState::states_array_register(states);
 }
 
@@ -62,11 +66,14 @@ void CApp::run(){
     }
 }
 
+
 void CApp::isr(time_t _period){
-    sm.critical_operate();
+    
+//    sm.critical_operate();
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
+    
 }
 
 
@@ -101,6 +108,7 @@ void CApp::pwm_init(){
     PWM_CTR_StructInit(&PWM_CTR_InitStruct);
     PWM_CTR_InitStruct.PWM_ChAction_CTREqZero_A =  PWM_ChAction_ToZero;
     PWM_CTR_InitStruct.PWM_CTR_Mode = PWM_CTR_Mode_UpDown;
+    PWM_CTR_InitStruct.PWM_CTR_Dir_Phase = PWM_CTR_Dir_Up;
     PWM_CTR_InitStruct.PWM_Period = PWM_MAX/2 - 1;
     PWM_CTR_InitStruct.PWM_CTR_SyncOut = PWM_CTR_SyncOut_CTREqZero;
     PWM_CTR_Init(NT_PWM0, &PWM_CTR_InitStruct);
@@ -260,23 +268,35 @@ void PWM0_IRQHandler(void){
     
 }
 
-      
 
 void ADC_SEQ0_IRQHandler(void){
- 
+    
+    
     ADC_SEQ_ITStatusClear(ADC_SEQ_Module_0);
     
     
+//    app.ledWORK.set();
 //    for (int i = 0; i < 11; i++){
 //      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
 //    }
+//    app.ledWORK.clear();
     
+    
+    app.ledWORK.set();
     
     for (int i = 0; i < array_size(adc_modules); i++){
-        uint16_t _res = static_cast<uint16_t>(NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA);
-        adc_modules[i].write(_res);
-        app.sensors[i]->adc_val_set(_res);
+        uint16_t _adcVal = static_cast<uint16_t>(NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA);
+        adc_modules[i].write(_adcVal);
     }
+    
+    app.sens_iFull.adc_val_set(adc_modules[0].read());
+    app.sens_iLoad.adc_val_set(adc_modules[1].read());
+    app.sens_uBUSP_N.adc_val_set(adc_modules[2].read());
+    app.sens_uBUSN_N.adc_val_set(adc_modules[3].read());
+    app.sens_uOut.adc_val_set(adc_modules[4].read());
+    
+    
+//    app.ledWORK.clear();
     
     
     app.isr(TIME_USEC(50));

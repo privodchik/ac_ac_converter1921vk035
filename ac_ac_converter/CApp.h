@@ -11,17 +11,27 @@
 #include "CADC.h"
 #include "CUART.h"
 #include "CPWM.h"
+
 #include "CSensI.h"
 #include "CSensU.h"
 
 #include "CInit.h"
 #include "CReady.h"
+#include "CCharge.h"
+#include "CFault.h"
 
 #include "state_machine.h"
+
+#include "CErrors.h"
+
+#include "piregulator.h"
 
 
 
 extern const uint32_t SYSTEM_CLOCK;
+
+extern const int ERRORS_BUFFER_SIZE;
+extern CErrors::eError_t errorBuffer[5]; 
 
 class CApp{
     
@@ -50,13 +60,30 @@ class CApp{
     //------------State Machine-------------------------------------------------
     CInit       stInit;
     CReady      stReady;
+    CCharge     stCharge;
+    CFault      stFault;
     
     static const int numStates = 7;
     IState* states[numStates];
     
     CStateMachine sm{&stInit};
     
-    //--------------------------------------------------------------------------    
+    //--------------------------------------------------------------------------
+    
+    //------------Errors -------------------------------------------------------
+    CErrors errors{errorBuffer, array_size(errorBuffer)};
+    
+    //--------------------------------------------------------------------------
+    
+    //------------Regulators ---------------------------------------------------
+    
+    CPIReg regUx{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUy{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    
+    CPIReg regIx{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    //--------------------------------------------------------------------------
+    
+    
     
   public:
     CApp();

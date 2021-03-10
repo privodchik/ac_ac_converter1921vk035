@@ -5,6 +5,8 @@
 
 #include <stdint.h>
 
+#include "iqmath.h"
+
 
 
 //-------------------------------------------------------------------
@@ -13,10 +15,19 @@
 //-------------------------------------------------------------------
 #define POWER_STR       "10kW"
 
-#define FREQ_KHZ 20.0
-extern uint32_t SystemCoreClock;
+#define FREQ_KHZ 40.0
 
+// --------------- Bus Voltages ------------------------------------------------
+extern const iq_t UBUSPN_NOM;
+extern const iq_t UBUSNN_NOM;
 
+extern const iq_t UBUSPN_MIN;
+extern const iq_t UBUSNN_MIN;
+
+extern const iq_t UBUSPN_MAX;
+extern const iq_t UBUSNN_MAX;
+
+// -----------------------------------------------------------------------------
 
 
 

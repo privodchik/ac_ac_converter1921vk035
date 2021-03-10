@@ -5,11 +5,12 @@
 #define _ISTATE_H
 
 //#include "IQmathLib.h"
-#include "iqmath_int32_mcu.h"
+#include "iqmath.h"
 #include <cstdint>
 #include "pt.h"
 #include "CSysTick.h"
 #include "timer.h"
+#include "config.h"
 
 class IState
 {
@@ -40,7 +41,9 @@ class IState
       static const uint8_t STATES_QUANTITY;  
     
     public:
-      IState(eState _state) : m_state(_state){}
+      IState(eState _state) : m_state(_state){
+          m_current_state = _state;
+          m_ptr_current_state = this;}
       virtual ~ IState() = 0;
               
       virtual void critical_protect();
@@ -52,6 +55,7 @@ class IState
       void state_set(eState _state);
       static IState* state_current_ptr_get() {return m_ptr_current_state;}
       static eState state_current_no_get(){return m_current_state;}
+      eState state_no_get() const {return m_state;}
       
       
     private:  

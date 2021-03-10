@@ -30,9 +30,13 @@ class CADCModule
     void clk_div_set(uint32_t _clkDiv){m_clkDiv = _clkDiv;}
     uint32_t clk_div_get() const {return m_clkDiv;}
 
+    #pragma inline = forced
     int id_get(){return m_id;}
     
+    #pragma inline = forced
     uint16_t read() const {return m_result;}
+    
+    #pragma inline = forced
     void write(uint16_t _res) {m_result = _res;}
 };
 

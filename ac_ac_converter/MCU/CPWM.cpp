@@ -4,6 +4,7 @@
 #include "CPWM.h"
 
 #include "config.h"
+#include "system_K1921VK01T.h"
 
 void CPWM::out_enable(){
 }

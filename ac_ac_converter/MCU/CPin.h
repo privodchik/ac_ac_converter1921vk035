@@ -125,4 +125,15 @@ inline void CPin::pullUp_set(eState _state){
 }
 
 
+#pragma inline = forced
+inline void CPin::write(bool _state){
+    GPIO_WriteBit(m_port, uint32_t(m_pin), _state ? Bit_SET :  Bit_CLEAR);
+}
+
+#pragma inline = forced
+inline bool CPin::read(){
+    return static_cast<bool>
+        ( GPIO_ReadBit(m_port, static_cast<uint32_t>(m_pin)) );
+}
+
 #endif //_CPIN_H
