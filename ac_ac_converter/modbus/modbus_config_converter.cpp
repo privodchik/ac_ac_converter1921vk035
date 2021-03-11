@@ -15,6 +15,10 @@ uint16_t modbus_slave_id_len = countof(modbus_slave_id);
 //-------------------------------------------------------------------
 
 
+void f(){
+    app.sm.state_name_get();
+}
+
 const MODBUS_REG _modbus_holding_regs[] =
 {
      ModbusReg(SRAM_REG, RESERVED_, "GROUP=modbus") // Настройки Modbus
@@ -35,7 +39,7 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(PROM_REG, UINT16_CB(modbus1_password, NULL, NULL), "password") // пароль на системные команды
     ,ModbusReg(SRAM_REG, UINT16_RO(modbus_regs_mode), "access_mode") // режим доступа к регистрам modbus:
         // 0 - пользовательский, 1 - инженерный, 	 2 - заводской      
-    ,ModbusReg(SRAM_REG, UINT16_RO(IState::state_current_get()), "state")  
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sm.state_name_get()), "state")      
         
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
@@ -51,6 +55,7 @@ const MODBUS_REG _modbus_holding_regs[] =
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uOut.read(), QG, Q5), "uOut[V]")
 };
+
 
 
 

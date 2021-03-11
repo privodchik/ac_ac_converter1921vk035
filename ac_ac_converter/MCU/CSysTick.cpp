@@ -6,7 +6,7 @@
 #include "system_K1921VK01T.h"
 #include "atomic.h"
 
-time_t CSysTick::sysTickTimeMs = 0;
+time_t CSysTick::sysTickTime_uSec = 0;
 
 
 
@@ -23,7 +23,7 @@ void SysTick_Handler(void)
     ATOMIC_BLOCK_BEGIN;
     {
         if(SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
-            CSysTick::sysTickTimeMs++;
+            CSysTick::sysTickTime_uSec += 1000;
         }
     }
     ATOMIC_BLOCK_END;

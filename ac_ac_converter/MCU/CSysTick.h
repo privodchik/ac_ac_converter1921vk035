@@ -10,7 +10,7 @@
 class CSysTick : IPheriphery{
     
   public:
-    static time_t sysTickTimeMs;
+    static time_t sysTickTime_uSec;
     
 };
 

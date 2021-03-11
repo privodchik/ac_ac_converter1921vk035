@@ -23,17 +23,7 @@ void CReady::critical_operate(){
 
 void CReady::operate(){
 	IState::operate();
-	
-	
-//	if(app.cmds.start || (is_start_from_vsi() && !is_stop_from_vsi())){
-//		IState::state_set(IState::PRERUN);
-//	}
-//	
-//	if (app.cmds.rst){
-//		IState::state_set(IState::INIT);
-//		app.cmds.rst = 0;
-//	}
-	
+        if (m_stateTime > TIME_SEC(5.0)) app.sm.state_set(&app.stInit);
 }
 
 void CReady::reset(){

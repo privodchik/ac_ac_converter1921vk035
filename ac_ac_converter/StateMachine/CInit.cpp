@@ -22,24 +22,10 @@ void CInit::critical_operate(){
 
 void CInit::operate(){
 	IState::operate();
-	task_wait(&pt_wait);
+        if (m_stateTime > TIME_SEC(1.0)) app.sm.state_set(&app.stCharge);
 }
 
 void CInit::reset(){
 	IState::reset();
-}
-
-
-char CInit::task_wait(PT* pt){
-	static TIMER tmr;
-	
-	PT_BEGIN(pt);
-	timer_set(&tmr, TIME_SEC(5));
-	
-	PT_YIELD_UNTIL(pt, timer_expired(&tmr));
-        IState::state_set(IState::CHARGE);
-        return PT_EXITED;
-	
-	PT_END(pt);
 }
 

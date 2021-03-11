@@ -27,11 +27,8 @@ CApp::CApp(){
     sensors[3] = &sens_uBUSN_N;
     sensors[4] = &sens_uOut;
     
-    states[IState::eState::INIT]= &stInit;
-    states[IState::eState::CHARGE]= &stCharge;
-    states[IState::eState::READY]= &stReady;
-    states[IState::eState::FAULT]= &stFault;
-    IState::states_array_register(states);
+    IState::state_machine_register(&sm);
+    
 }
 
 static const uint32_t SYSTEM_CLOCK = 100000000;
@@ -75,7 +72,7 @@ void CApp::isr(time_t _period){
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
-    acs(_period);
+//    acs(_period);
     
 }
 

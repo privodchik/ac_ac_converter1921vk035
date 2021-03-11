@@ -8,23 +8,22 @@
 
 class CInit : public IState
 {
-	public:
-		CInit() : IState(INIT){}
-			
-		virtual void critical_protect() override;
-		virtual void non_critical_protect() override;
-		
-		virtual void critical_operate() override;	
-		virtual void operate()override;
-		
-	public:
-		virtual void reset();
-                
-//                time_t (CInit::*ptrFunc)() = &CInit::time_in_state_est;
-	
-	private:
-		PT pt_wait;
-		PT_THREAD(task_wait(PT* pt));
+  public:
+    CInit() : IState(INIT){}
+            
+    virtual void critical_protect() override;
+    virtual void non_critical_protect() override;
+    
+    virtual void critical_operate() override;	
+    virtual void operate()override;
+          
+  public:
+    virtual void reset();
+    
+//               time_t (CInit::*ptrFunc)() = &CInit::time_in_state_est;
+  
+   
+    
 };
 
 #endif //_CINIT

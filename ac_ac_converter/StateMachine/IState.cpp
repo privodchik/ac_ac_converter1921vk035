@@ -6,27 +6,10 @@
 #include "CApp.h"
 extern CApp app;
 
+CStateMachine* IState::m_pStateMachine = nullptr;
 
-IState* IState::m_ptr_current_state;
-IState::eState IState::m_current_state;
-
-const uint8_t IState::STATES_QUANTITY = IState::eState::DIAG + 1; 
-
-IState** IState::m_pStatesArray;
-
-
+                  
 IState::~IState(){}
-
-void IState::state_set(eState _state){
-	
-	m_current_state = _state;
-        m_ptr_current_state = m_pStatesArray[_state];
-
-	if (_state != m_state){
-		m_ptr_current_state->reset();
-	}		
-	
-}
 
 void IState::critical_protect(){
 }
@@ -35,10 +18,6 @@ void IState::non_critical_protect(){
 }
 
 void IState::critical_operate(){
-    if (IState::m_current_state != IState::eState::RUN){
-        app.pwm_A.out_disable();
-        app.pwm_B.out_disable();
-    }
 }
 
 void IState::operate(){
@@ -53,15 +32,15 @@ char IState::task_time_of_state(PT* pt){
     static time_t _time;
     PT_BEGIN(pt);
     
-    _time = CSysTick::sysTickTimeMs;
+    _time = CSysTick::sysTickTime_uSec;
     m_stateTime = TIME_SEC(0.0);
     
     PT_YIELD(pt);
-      m_stateTime += CSysTick::sysTickTimeMs < _time ? 
-                     UINTMAX_MAX - _time + CSysTick::sysTickTimeMs :
-                     CSysTick::sysTickTimeMs - _time;
+      m_stateTime += CSysTick::sysTickTime_uSec < _time ? 
+                     UINTMAX_MAX - _time + CSysTick::sysTickTime_uSec :
+                     CSysTick::sysTickTime_uSec - _time;
       
-      _time = CSysTick::sysTickTimeMs;
+      _time = CSysTick::sysTickTime_uSec;
     return PT_EXITED;
     
     PT_END(pt);

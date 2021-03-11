@@ -12,24 +12,36 @@ class CStateMachine
   private:		
     
   private:
-    IState* m_ptr_current_state;
+    IState*             m_ptrCurrentState;
+    IState::eState      m_CurrentStateName;
 		
   public:
     CStateMachine(IState* _pInitState)
     {
-        m_ptr_current_state = _pInitState;
-//        _pInitState->state_set(_pInitState->state_no_get());
-//        m_ptr_current_state = _pInitState->state_current_ptr_get();
+        m_ptrCurrentState = _pInitState;
+        m_CurrentStateName = m_ptrCurrentState->state_name_get();
+        m_ptrCurrentState->reset();
     }
-    void state_set(IState::eState _state);
-    IState::eState state_name_get(){return m_ptr_current_state->state_current_no_get();}
+
+    void state_set(IState* _state){
+        m_ptrCurrentState = _state;
+
+        if (m_CurrentStateName != _state->state_name_get()){
+            m_CurrentStateName = m_ptrCurrentState->state_name_get();
+            m_ptrCurrentState->reset();
+        }
+    }
+     
+    #pragma inline = forced
+    const IState* state_get() const{return m_ptrCurrentState;}
+    const IState::eState& state_name_get() const {return m_CurrentStateName;}
     
     void operate(){
-        m_ptr_current_state->operate();
+        m_ptrCurrentState->operate();
     }
     
     void critical_operate(){
-        m_ptr_current_state->critical_operate();
+        m_ptrCurrentState->critical_operate();
     }
     
     

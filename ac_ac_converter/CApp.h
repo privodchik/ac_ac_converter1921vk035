@@ -64,10 +64,6 @@ class CApp{
     CReady      stReady;
     CCharge     stCharge;
     CFault      stFault;
-    
-    static const int numStates = 7;
-    IState* states[numStates];
-    
     CStateMachine sm{&stInit};
     
     //--------------------------------------------------------------------------

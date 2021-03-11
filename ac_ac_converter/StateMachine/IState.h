@@ -12,6 +12,8 @@
 #include "timer.h"
 #include "config.h"
 
+class CStateMachine; 
+
 class IState
 {
     public:
@@ -27,23 +29,19 @@ class IState
     
     protected:
       const eState m_state;
-
-      static eState m_current_state;
-      static IState* m_ptr_current_state;
       
-    public:
-      static const eState& state_current_get(){
-          return m_current_state;
-      }
-      
-        
-    protected:
-      static const uint8_t STATES_QUANTITY;  
+    private:
+      static CStateMachine* m_pStateMachine;
     
+  public:
+    static void state_machine_register(CStateMachine* _pStateMachine){
+          m_pStateMachine = _pStateMachine;
+    }
+    const CStateMachine* state_machine_ptr_get() const{return m_pStateMachine;}
+      
+
     public:
-      IState(eState _state) : m_state(_state){
-          m_current_state = _state;
-          m_ptr_current_state = this;}
+      IState(eState _state) : m_state(_state){}
       virtual ~ IState() = 0;
               
       virtual void critical_protect();
@@ -52,19 +50,8 @@ class IState
       virtual void critical_operate();	
       virtual void operate();
       
-      void state_set(eState _state);
-      static IState* state_current_ptr_get() {return m_ptr_current_state;}
-      static eState state_current_no_get(){return m_current_state;}
-      eState state_no_get() const {return m_state;}
+      eState state_name_get() const {return m_state;}
       
-      
-    private:  
-      static IState** m_pStatesArray;
-    public:
-      static void states_array_register(IState** _pStatesArray){
-          m_pStatesArray = _pStatesArray;
-      }
-                    
     public:
       virtual void reset();
       
@@ -74,7 +61,9 @@ class IState
       PT pt_stateInTime;
       PT_THREAD(task_time_of_state(PT*));
       
-    
+    protected:
+      #pragma inline = forced
+      bool is_time_expired(time_t _time_usec){return m_stateTime > _time_usec;}
     
 };
 
