@@ -2729,6 +2729,12 @@
             <name>$PROJ_DIR$\StateMachine\CReady.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\StateMachine\CRun.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CRun.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\StateMachine\IState.cpp</name>
         </file>
         <file>
@@ -2850,6 +2856,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\Utility\c_lang_adapter.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Utility\user_constants.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Utility\user_constants.h</name>
         </file>
     </group>
     <group>

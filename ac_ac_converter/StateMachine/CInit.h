@@ -11,11 +11,11 @@ class CInit : public IState
 	public:
 		CInit() : IState(INIT){}
 			
-		virtual void critical_protect();
-		virtual void non_critical_protect();
+		virtual void critical_protect() override;
+		virtual void non_critical_protect() override;
 		
-		virtual void critical_operate();	
-		virtual void operate();
+		virtual void critical_operate() override;	
+		virtual void operate()override;
 		
 	public:
 		virtual void reset();

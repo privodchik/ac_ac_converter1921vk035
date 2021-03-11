@@ -17,6 +17,7 @@
 
 #include "CInit.h"
 #include "CReady.h"
+#include "CRun.h"
 #include "CCharge.h"
 #include "CFault.h"
 
@@ -59,6 +60,7 @@ class CApp{
     
     //------------State Machine-------------------------------------------------
     CInit       stInit;
+    CRun        stRun;
     CReady      stReady;
     CCharge     stCharge;
     CFault      stFault;
@@ -77,10 +79,10 @@ class CApp{
     
     //------------Regulators ---------------------------------------------------
     
-    CPIReg regUx{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
-    CPIReg regUy{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUd{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUq{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
     
-    CPIReg regIx{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regId{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
     //--------------------------------------------------------------------------
     
     

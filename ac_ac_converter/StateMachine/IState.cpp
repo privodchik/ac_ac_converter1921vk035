@@ -35,7 +35,7 @@ void IState::non_critical_protect(){
 }
 
 void IState::critical_operate(){
-    if (IState::m_current_state == IState::eState::RUN){
+    if (IState::m_current_state != IState::eState::RUN){
         app.pwm_A.out_disable();
         app.pwm_B.out_disable();
     }
@@ -47,7 +47,6 @@ void IState::operate(){
 
 void IState::reset(){
     PT_INIT(&pt_stateInTime);
-    
 }
 
 char IState::task_time_of_state(PT* pt){

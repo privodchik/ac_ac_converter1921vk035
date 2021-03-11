@@ -30,7 +30,7 @@ class CIntegrator : public ITransFunc{
           m_yk += IQmpy(m_TsDivTi, _xk);
 	return out_limit();
       }
-			
+      
 };
 
 

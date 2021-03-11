@@ -16,6 +16,8 @@
 const int ERRORS_BUFFER_SIZE = 5;
 CErrors::eError_t errorBuffer[ERRORS_BUFFER_SIZE]; 
 
+void acs(iq_t _Ts);
+
 
 CApp::CApp(){
     
@@ -73,6 +75,7 @@ void CApp::isr(time_t _period){
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
+    acs(_period);
     
 }
 
@@ -308,5 +311,39 @@ void ADC_SEQ0_IRQHandler(void){
 }
 
 
+static int fil = 0;
+
+#pragma inline = forced
+inline void acs(iq_t _Ts){
+    iq_t _wt = app.stRun.angle_est(_Ts);
+    iq_t sinus = IQsin(_wt);
+    iq_t cosin = IQcos(_wt);
+    
+    iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
+    
+    iq_t uRef_d =  IQmpy(virtGrd, cosin);
+    iq_t uRef_q = -IQmpy(virtGrd, sinus);
+    
+    iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
+    iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
+    
+    iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
+    iq_t u_d = app.regUd.out_est(_err);
+
+    _err = IQmpy(uRef_q - uOut_q, IQ(0.1));
+    iq_t u_q = app.regUq.out_est(_err);
+
+    // Output current controller
+    iq_t out = IQmpy(u_d, cosin) - IQmpy(u_q, sinus);
+    
+    _err = (out - 
+          IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
+          IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
+          fil/50;
+          
+     iq_t ccr = app.regId.out_est(_err);
+    
+    
+}
 
 
