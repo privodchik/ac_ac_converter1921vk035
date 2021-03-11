@@ -9,18 +9,19 @@
 
 class CReady : public IState
 {
-	public:
-		CReady() : IState(READY){}
-			
-		virtual void critical_protect();
-		virtual void non_critical_protect();
-		
-		virtual void critical_operate();	
-		virtual void operate();
-		
-	public:
-		virtual void reset();
-	
+  public:
+    CReady() : IState(READY){}
+            
+    virtual void critical_protect();
+    virtual void non_critical_protect();
+    
+    virtual void critical_operate();	
+    virtual void operate();
+          
+  public:
+    virtual void reset();
+    
+  
 
 	
 };

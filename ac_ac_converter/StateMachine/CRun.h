@@ -8,12 +8,23 @@
 #include "iqmath.h"
 #include "user_constants.h"
 
+#include "piregulator.h"
+
 
 class CRun : public IState
 {
   private:
     iq_t m_currentAngle = 0;
     iq_t m_delWt;
+    
+  public: 
+    // The regulators are needed to copy parameters to main app.regXx
+    CPIReg regUd_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUq_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regId_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    
+    bool m_isRegsInit = false;
+    
     
   public:
     CRun() : IState(RUN){}
@@ -23,20 +34,27 @@ class CRun : public IState
     
     virtual void critical_operate() override;	
     virtual void operate() override;
+    
+    
           
   public:
     virtual void reset() override;
+    
+  private:
+    void init_regulators();
       
   public:
-    iq_t angle_est(iq_t _Ts);
+    iq_t angle_est(iq_t _W, iq_t _Ts);
 };
 
 #pragma inline = forced
-inline iq_t CRun::angle_est(iq_t _Ts){
-    iq_t _delWt = IQmpy(utl::W, _Ts);
+inline iq_t CRun::angle_est(iq_t _W, iq_t _Ts){
+    iq_t _delWt = IQmpy(_W, _Ts);
     m_currentAngle += _delWt;
     
     if (m_currentAngle > utl::_2PI) m_currentAngle = 0;
+    else if (m_currentAngle < - utl::_2PI) m_currentAngle = 0;
+    
     return m_currentAngle;    
 }
 

@@ -12,6 +12,8 @@
 #include "CUART.h"
 #include "CPWM.h"
 
+#include "user_constants.h"
+
 #include "CSensI.h"
 #include "CSensU.h"
 
@@ -20,12 +22,14 @@
 #include "CRun.h"
 #include "CCharge.h"
 #include "CFault.h"
-
 #include "state_machine.h"
 
 #include "CErrors.h"
 
 #include "piregulator.h"
+
+#include "CCmds.h"
+
 
 
 
@@ -79,6 +83,10 @@ class CApp{
     CPIReg regUq{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
     
     CPIReg regId{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    //--------------------------------------------------------------------------
+    //------------Commands -----------------------------------------------------
+    CCmds cmds;
+    
     //--------------------------------------------------------------------------
     
     

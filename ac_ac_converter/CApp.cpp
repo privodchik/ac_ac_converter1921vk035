@@ -72,7 +72,7 @@ void CApp::isr(time_t _period){
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
-//    acs(_period);
+    acs(_period);
     
 }
 
@@ -131,8 +131,8 @@ void CApp::pwm_init(){
     PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_B =   PWM_ChAction_ToZero;
     PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_B = PWM_ChAction_ToOne;
     
-    PWM_CMP_InitStruct.PWM_CMPB = 0;
-    PWM_CMP_InitStruct.PWM_CMPA = 0;
+    PWM_CMP_InitStruct.PWM_CMPB = PWM_MAX/4;
+    PWM_CMP_InitStruct.PWM_CMPA = PWM_MAX/4;
     
     PWM_CMP_Init(NT_PWM0, &PWM_CMP_InitStruct);
     PWM_CMP_Init(NT_PWM1, &PWM_CMP_InitStruct);
@@ -308,39 +308,60 @@ void ADC_SEQ0_IRQHandler(void){
 }
 
 
+
+
 static int fil = 0;
 
 #pragma inline = forced
 inline void acs(iq_t _Ts){
-    iq_t _wt = app.stRun.angle_est(_Ts);
-    iq_t sinus = IQsin(_wt);
-    iq_t cosin = IQcos(_wt);
     
-    iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
-    
-    iq_t uRef_d =  IQmpy(virtGrd, cosin);
-    iq_t uRef_q = -IQmpy(virtGrd, sinus);
-    
-    iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
-    iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
-    
-    iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
-    iq_t u_d = app.regUd.out_est(_err);
+    if (   app.sm.state_name_get() == IState::eState::RUN 
+        && app.stRun.m_isRegsInit)
+    {
+      iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
+      iq_t sinus = IQsin(_wt);
+      iq_t cosin = IQcos(_wt);
+      
+      iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
+      
+      iq_t uRef_d =  IQmpy(virtGrd, cosin);
+      iq_t uRef_q = -IQmpy(virtGrd, sinus);
+      
+      iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
+      iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
+      
+      iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
+      iq_t u_d = app.regUd.out_est(_err);
 
-    _err = IQmpy(uRef_q - uOut_q, IQ(0.1));
-    iq_t u_q = app.regUq.out_est(_err);
+      _err = IQmpy(uRef_q - uOut_q, IQ(0.1));
+      iq_t u_q = app.regUq.out_est(_err);
 
-    // Output current controller
-    iq_t out = IQmpy(u_d, cosin) - IQmpy(u_q, sinus);
-    
-    _err = (out - 
-          IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
-          IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
-          fil/50;
-          
-     iq_t ccr = app.regId.out_est(_err);
+      // Output current controller
+      iq_t out = IQmpy(u_d, cosin) - IQmpy(u_q, sinus);
+      
+      _err = (out - 
+            IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
+            IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
+            fil/50;
+      
+       uint16_t ccr = static_cast<uint16_t>(app.regId.out_est(_err));
+       
+       app.pwm_A.cmp_set(ccr);
+       app.pwm_B.cmp_set(ccr);
+//       app.pwm_A.cmp_set(512U);
+//       app.pwm_B.cmp_set(512U);
+       
+       app.pwm_A.out_enable();
+       app.pwm_B.out_enable();
+       
+       
+    } else if (app.sm.state_name_get() == IState::eState::DIAG){
+        
+    } else{
+        app.pwm_A.out_disable();
+        app.pwm_B.out_disable();
+    }
     
     
 }
-
 

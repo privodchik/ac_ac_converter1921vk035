@@ -34,6 +34,7 @@ class CStateMachine
      
     #pragma inline = forced
     const IState* state_get() const{return m_ptrCurrentState;}
+    #pragma inline = forced
     const IState::eState& state_name_get() const {return m_CurrentStateName;}
     
     void operate(){

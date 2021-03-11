@@ -8,7 +8,7 @@
 
 
 class CIntegrator : public ITransFunc{
-    private:
+    public:
         iq_t m_Ti;
     private:
         iq_t m_TsDivTi;

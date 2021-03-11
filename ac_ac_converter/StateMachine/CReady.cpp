@@ -23,7 +23,7 @@ void CReady::critical_operate(){
 
 void CReady::operate(){
 	IState::operate();
-        if (m_stateTime > TIME_SEC(5.0)) app.sm.state_set(&app.stInit);
+        if(app.cmds.start) app.sm.state_set(&app.stRun);                                             
 }
 
 void CReady::reset(){

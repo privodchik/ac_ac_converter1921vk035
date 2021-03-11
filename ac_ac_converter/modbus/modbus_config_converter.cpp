@@ -16,7 +16,7 @@ uint16_t modbus_slave_id_len = countof(modbus_slave_id);
 
 
 void f(){
-    app.sm.state_name_get();
+    app.stRun.regId_shadow.m_sat_pos;
 }
 
 const MODBUS_REG _modbus_holding_regs[] =
@@ -39,7 +39,11 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(PROM_REG, UINT16_CB(modbus1_password, NULL, NULL), "password") // пароль на системные команды
     ,ModbusReg(SRAM_REG, UINT16_RO(modbus_regs_mode), "access_mode") // режим доступа к регистрам modbus:
         // 0 - пользовательский, 1 - инженерный, 	 2 - заводской      
-    ,ModbusReg(SRAM_REG, UINT16_RO(app.sm.state_name_get()), "state")      
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sm.state_name_get()), "state") 
+        
+        
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=cmd") // Команды управления
+    ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.start, 0, 1), "start; gui=button") // запуск/останов двигателя    
         
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
@@ -54,8 +58,25 @@ const MODBUS_REG _modbus_holding_regs[] =
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSP_N.read(), QG, Q5), "uBusPN[V]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uOut.read(), QG, Q5), "uOut[V]")
+       
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_regs") // Регуляторы тока
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_proportional_part, QG, Q10), "regId K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_integral_part.m_Ti, QG, Q6), "regId Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_pos, QG, Q3), "regId Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_neg, QG, Q3), "regId Sat_neg")   
+    ,ModbusReg(SRAM_REG, RESERVED_, "") 
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_proportional_part, QG, Q10), "regUd K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_integral_part.m_Ti, QG, Q6), "regUd Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_pos, QG, Q3), "regUd Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_neg, QG, Q3), "regUd Sat_neg")   
+    ,ModbusReg(SRAM_REG, RESERVED_, "")         
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_proportional_part, QG, Q10), "regUq K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_integral_part.m_Ti, QG, Q6), "regUq Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_pos, QG, Q3), "regUq Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_neg, QG, Q3), "regUq Sat_neg")    
+        
+        
 };
-
 
 
 

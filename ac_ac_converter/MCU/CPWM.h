@@ -6,6 +6,7 @@
 
 #include "IPheriphery.h"
 #include "niietcm4_pwm.h"
+#include "system_K1921VK01T.h"
 
 
 class CPWM : public IPheriphery{
@@ -38,10 +39,34 @@ class CPWM : public IPheriphery{
         return m_freqInTicks;
     }
     
-    void out_enable();
-    void out_disable();
     
-    void cmp_set(uint16_t _cmp) const;
+    #pragma inline = forced
+    void out_enable(){
+        
+        constexpr uint32_t SW_ON = 2;
+        constexpr uint32_t SW_OFF = 1;
+        
+        constexpr uint32_t SET_STATES_A = (SW_ON << 4)  | (SW_OFF << 6);
+        constexpr uint32_t SET_STATES_B = (SW_OFF << 4) | (SW_ON << 6);
+
+        m_pwm->AQCTLA &= SET_STATES_A;
+        m_pwm->AQCTLA |= SET_STATES_A;
+        
+        m_pwm->AQCTLB &= SET_STATES_B;
+        m_pwm->AQCTLB |= SET_STATES_B;
+    }
+    
+    #pragma inline = forced
+    void out_disable(){
+      m_pwm->AQCTLA = 0;
+      m_pwm->AQCTLB = 0;
+    }
+    
+    #pragma inline = forced
+    void cmp_set(uint16_t _cmp) const{
+      m_pwm->CMPA_bit.CMPA = _cmp;
+      m_pwm->CMPB_bit.CMPB = _cmp;
+    }
     
 };
 

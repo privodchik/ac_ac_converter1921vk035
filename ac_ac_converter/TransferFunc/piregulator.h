@@ -10,7 +10,7 @@
 
 class CPIReg : public ITransFunc
 {
-    private:	
+    public:	
             iq_t         m_proportional_part;
             CIntegrator  m_integral_part;
     
