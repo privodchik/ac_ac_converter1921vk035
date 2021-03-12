@@ -290,7 +290,7 @@
                 <option>
                     <name>CCAllowList</name>
                     <version>1</version>
-                    <state>00000000</state>
+                    <state>11111110</state>
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
@@ -375,6 +375,7 @@
                     <state>$PROJ_DIR$\Electrical\Sensors</state>
                     <state>$PROJ_DIR$\TransferFunc</state>
                     <state>$PROJ_DIR$\WorkClasses</state>
+                    <state>$PROJ_DIR$\TEST_SW</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -390,7 +391,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -399,7 +400,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -2482,6 +2483,12 @@
             <name>$PROJ_DIR$\StateMachine\CCharge.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\StateMachine\CDiag.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CDiag.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\StateMachine\CFault.cpp</name>
         </file>
         <file>
@@ -2643,6 +2650,24 @@
     </group>
     <group>
         <name>WorkClasses</name>
+        <group>
+            <name>TestSwitch</name>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CIgbt.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CIgbt.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CKM.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CKM.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\IControlObj.h</name>
+            </file>
+        </group>
         <file>
             <name>$PROJ_DIR$\WorkClasses\CCmds.cpp</name>
         </file>

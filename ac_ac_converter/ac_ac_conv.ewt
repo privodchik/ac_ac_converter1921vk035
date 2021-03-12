@@ -2711,6 +2711,12 @@
             <name>$PROJ_DIR$\StateMachine\CCharge.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\StateMachine\CDiag.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\StateMachine\CDiag.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\StateMachine\CFault.cpp</name>
         </file>
         <file>
@@ -2866,6 +2872,24 @@
     </group>
     <group>
         <name>WorkClasses</name>
+        <group>
+            <name>TestSwitch</name>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CIgbt.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CIgbt.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CKM.cpp</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\CKM.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\TEST_SW\IControlObj.h</name>
+            </file>
+        </group>
         <file>
             <name>$PROJ_DIR$\WorkClasses\CCmds.cpp</name>
         </file>

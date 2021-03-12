@@ -75,6 +75,16 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_pos, QG, Q3), "regUq Sat_pos")
     ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_neg, QG, Q3), "regUq Sat_neg")    
         
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_diag")
+    ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.diag, 0, 1), "diag; gui=button") // диагностика
+    ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.rst, 0, 1), "reset; gui=button")
+    ,ModbusReg(PROM_REG, FLOATIQ_RANGE(app.stDiag.m_pwm_duty,  QG, Q14,  IQ(0.0), IQ(1.0)), "duty[%]")  // скважность
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm0_chA, 0, 1), "pwm0_chA")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm0_chB, 0, 1), "pwm0_chB")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm1_chA, 0, 1), "pwm1_chA")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm1_chB, 0, 1), "pwm1_chB")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.km, 0, 1), "km")    
+        
         
 };
 

@@ -18,10 +18,10 @@ class CCmds{
       uint16_t diag;
 
       uint16_t pwm[eQ5];
-      uint16_t& pwmA_hi;
-      uint16_t& pwmA_lo;
-      uint16_t& pwmB_hi;
-      uint16_t& pwmB_lo;
+      uint16_t& pwm0_chA;
+      uint16_t& pwm0_chB;
+      uint16_t& pwm1_chA;
+      uint16_t& pwm1_chB;
       uint16_t& km;
     
     public:

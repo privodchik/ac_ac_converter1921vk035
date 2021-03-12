@@ -8,6 +8,14 @@
 #include "niietcm4_pwm.h"
 #include "system_K1921VK01T.h"
 
+namespace pwm{
+    extern const uint32_t SW_ON;
+    extern const uint32_t SW_OFF;
+        
+    extern const uint32_t SET_STATES_A;
+    extern const uint32_t SET_STATES_B; 
+    extern const uint32_t CLR_STATES_A_OR_B;
+}
 
 class CPWM : public IPheriphery{
     
@@ -42,25 +50,40 @@ class CPWM : public IPheriphery{
     
     #pragma inline = forced
     void out_enable(){
+        m_pwm->AQCTLA &= pwm::SET_STATES_A;
+        m_pwm->AQCTLA |= pwm::SET_STATES_A;
         
-        constexpr uint32_t SW_ON = 2;
-        constexpr uint32_t SW_OFF = 1;
-        
-        constexpr uint32_t SET_STATES_A = (SW_ON << 4)  | (SW_OFF << 6);
-        constexpr uint32_t SET_STATES_B = (SW_OFF << 4) | (SW_ON << 6);
-
-        m_pwm->AQCTLA &= SET_STATES_A;
-        m_pwm->AQCTLA |= SET_STATES_A;
-        
-        m_pwm->AQCTLB &= SET_STATES_B;
-        m_pwm->AQCTLB |= SET_STATES_B;
+        m_pwm->AQCTLB &= pwm::SET_STATES_B;
+        m_pwm->AQCTLB |= pwm::SET_STATES_B;
+    }
+    void outA_enable(){
+        m_pwm->AQCTLA &= pwm::SET_STATES_A;
+        m_pwm->AQCTLA |= pwm::SET_STATES_A;
+    }
+    void outB_enable(){
+        m_pwm->AQCTLB &= pwm::SET_STATES_B;
+        m_pwm->AQCTLB |= pwm::SET_STATES_B;
     }
     
     #pragma inline = forced
     void out_disable(){
       m_pwm->AQCTLA = 0;
       m_pwm->AQCTLB = 0;
+      
+      m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
+      m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
     }
+    void outA_disable(){
+        m_pwm->AQCTLA = 0;
+        m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
+    }
+    void outB_disable(){
+        m_pwm->AQCTLB = 0;
+        m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
+    }
+    
+    
+    
     
     #pragma inline = forced
     void cmp_set(uint16_t _cmp) const{

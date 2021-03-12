@@ -22,6 +22,9 @@ void IState::critical_operate(){
 
 void IState::operate(){
     task_time_of_state(&pt_stateInTime);
+    if (app.sm.state_name_get() != IState::eState::RUN){
+        if (app.cmds.diag) app.sm.state_set(&app.stDiag);
+    }
 }
 
 void IState::reset(){

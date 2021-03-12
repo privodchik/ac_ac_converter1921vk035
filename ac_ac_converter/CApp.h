@@ -21,6 +21,7 @@
 #include "CReady.h"
 #include "CRun.h"
 #include "CCharge.h"
+#include "CDiag.h"
 #include "CFault.h"
 #include "state_machine.h"
 
@@ -67,6 +68,7 @@ class CApp{
     CRun        stRun;
     CReady      stReady;
     CCharge     stCharge;
+    CDiag       stDiag;
     CFault      stFault;
     CStateMachine sm{&stInit};
     

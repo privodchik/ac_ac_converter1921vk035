@@ -6,10 +6,10 @@
 
 CCmds::CCmds():
 	PWM_CMDS_QUANT(eQ5),
-	pwmA_hi(pwm[0]),
-	pwmA_lo(pwm[1]),
-	pwmB_hi(pwm[2]),
-	pwmB_lo(pwm[3]),
+	pwm0_chA(pwm[0]),
+	pwm0_chB(pwm[1]),
+	pwm1_chA(pwm[2]),
+	pwm1_chB(pwm[3]),
 	km(pwm[4])
 {
 	reset();
