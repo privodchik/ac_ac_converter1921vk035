@@ -19,9 +19,9 @@ class CRun : public IState
     
   public: 
     // The regulators are needed to copy parameters to main app.regXx
-    CPIReg regUd_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
-    CPIReg regUq_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
-    CPIReg regId_shadow{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUd_shadow{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
+    CPIReg regUq_shadow{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
+    CPIReg regId_shadow{IQ(0.000025), IQ(10.0), IQ(0.002), IQ(1.0), IQ(-1.0)};
     
     bool m_isRegsInit = false;
     
@@ -45,6 +45,8 @@ class CRun : public IState
       
   public:
     iq_t angle_est(iq_t _W, iq_t _Ts);
+    
+    iq_t m_virtGrid = 0; 
 };
 
 #pragma inline = forced
@@ -52,8 +54,8 @@ inline iq_t CRun::angle_est(iq_t _W, iq_t _Ts){
     iq_t _delWt = IQmpy(_W, _Ts);
     m_currentAngle += _delWt;
     
-    if (m_currentAngle > utl::_2PI) m_currentAngle = 0;
-    else if (m_currentAngle < - utl::_2PI) m_currentAngle = 0;
+    if (m_currentAngle > utl::_PI) m_currentAngle -= utl::_2PI;
+    else if (m_currentAngle < - utl::_PI) m_currentAngle += utl::_2PI;
     
     return m_currentAngle;    
 }

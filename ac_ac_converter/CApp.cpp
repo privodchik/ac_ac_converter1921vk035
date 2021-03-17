@@ -322,10 +322,13 @@ inline void acs(iq_t _Ts){
       iq_t sinus = IQsin(_wt);
       iq_t cosin = IQcos(_wt);
       
-      iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
+//      iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
+      app.stRun.m_virtGrid = IQmpy(IQ(165.0), cosin); 
       
-      iq_t uRef_d =  IQmpy(virtGrd, cosin);
-      iq_t uRef_q = -IQmpy(virtGrd, sinus);
+//      iq_t uRef_d =  IQmpy(virtGrd, cosin);
+//      iq_t uRef_q = -IQmpy(virtGrd, sinus);
+      iq_t uRef_d =  IQmpy(app.stRun.m_virtGrid, cosin);
+      iq_t uRef_q = -IQmpy(app.stRun.m_virtGrid, sinus);
       
       iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
       iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
@@ -339,17 +342,23 @@ inline void acs(iq_t _Ts){
       // Output current controller
       iq_t out = IQmpy(u_d, cosin) - IQmpy(u_q, sinus);
       
-      _err = (out - 
-            IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
-            IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
-            fil/50;
+//      _err = (out - 
+//            IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
+//            IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
+//            fil/50;
       
-       uint16_t ccr = static_cast<uint16_t>(app.regId.out_est(_err));
+      _err  = out;
+      _err -= IQmpy(app.sens_iLoad.read(), IQ(1.0));
+      _err += IQmpy(app.sens_iLoad.read(), IQ(0.85));
+      _err  = IQdiv(_err, 350.0);
+      _err  = IQdiv(fil, 50); 
+      
+      
+       iq_t ccr = app.regId.out_est(_err);
+       int iCCR = static_cast<int>(IQmpy(ccr,IQ(1250.0)));
        
-       app.pwm_A.cmp_set(ccr);
-       app.pwm_B.cmp_set(ccr);
-//       app.pwm_A.cmp_set(512U);
-//       app.pwm_B.cmp_set(512U);
+       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
+       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();

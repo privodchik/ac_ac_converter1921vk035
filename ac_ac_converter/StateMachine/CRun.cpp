@@ -28,6 +28,8 @@ void CRun::reset(){
 	IState::reset();
         m_currentAngle = 0;
         init_regulators();
+        
+        m_virtGrid = 0;
 }
 
 void CRun::init_regulators(){
