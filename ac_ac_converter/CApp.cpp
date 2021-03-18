@@ -199,6 +199,32 @@ void CApp::pwm_init(){
     __NVIC_EnableIRQ(PWM0_IRQn);
     PWM_ITConfig(NT_PWM0, PWM_Event_CTREqZero, 0);
     PWM_ITCmd(NT_PWM0, ENABLE);
+    
+    
+    
+    // TZ init
+    // PWM_A TZ0
+    _pin = CPin(CPin::ePort::PORT_E, CPin::ePin::Pin_8);
+    _pin.mode_set(CPin::eMode::ALT_FUNC);
+    _pin.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
+    _pin.direction_set(CPin::eDir::IN);
+    _pin.config_set();
+    
+    // PWM_B TZ1
+    
+    _pin.pin_set(CPin::ePin::Pin_9);
+    _pin.config_set();
+    
+    
+    pwm_A.TZ_enable(CPWM::eTZChannel::Channel_0, true);
+    pwm_B.TZ_enable(CPWM::eTZChannel::Channel_1, true);
+    
+    __NVIC_EnableIRQ(PWM0_TZ_IRQn);
+    __NVIC_EnableIRQ(PWM1_TZ_IRQn);
+    
+    
+    
+    
 }
 
 void CApp::adc_init(){
@@ -308,6 +334,29 @@ void ADC_SEQ0_IRQHandler(void){
 }
 
 
+inline void shutdown(){
+    app.errors.set(CErrors::eError_t::ERROR_FLT);
+    app.sm.state_set(&app.stFault);
+//    __NVIC_ClearPendingIRQ(PWM0_TZ_IRQn);
+    
+    app.pwm_A.TZ_reset();
+    app.pwm_B.TZ_reset();
+    
+    app.pwm_A.out_disable();
+    app.pwm_B.out_disable();
+    
+    __NVIC_DisableIRQ(PWM0_TZ_IRQn);
+    __NVIC_DisableIRQ(PWM1_TZ_IRQn);
+}
+
+
+void PWM0_TZ_IRQHandler(void){
+    shutdown();
+}
+
+void PWM1_TZ_IRQHandler(void){
+    shutdown();
+}
 
 
 static int fil = 0;

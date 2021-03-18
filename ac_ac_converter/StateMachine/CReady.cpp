@@ -28,5 +28,7 @@ void CReady::operate(){
 
 void CReady::reset(){
 	IState::reset();
+        __NVIC_EnableIRQ(PWM0_TZ_IRQn);
+        __NVIC_EnableIRQ(PWM1_TZ_IRQn);
 	
 }

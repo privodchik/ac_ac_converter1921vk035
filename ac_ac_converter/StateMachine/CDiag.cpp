@@ -49,6 +49,7 @@ void CDiag::operate(){
 	if (app.cmds.rst){
           for (int i = 0; i < CONTROLS_QUANT; i++) m_controls[i]->switch_off();
           app.cmds.diag = 0;
+          app.cmds.rst = 0;
           app.sm.state_set(&app.stInit);
 	}
 	
@@ -59,7 +60,9 @@ void CDiag::reset(){
 	for (int i = 0; i < CONTROLS_QUANT; i++) m_controls[i]->switch_off();
 	for (int i = 0; i < 8; i++) app.cmds.pwm[i] = 0;
 	app.cmds.rst = 0;
-	m_pwm_duty = IQ(0.1);
+//	m_pwm_duty = IQ(0.1);
+        __NVIC_DisableIRQ(PWM0_TZ_IRQn);
+        __NVIC_DisableIRQ(PWM1_TZ_IRQn);
 }
 
 

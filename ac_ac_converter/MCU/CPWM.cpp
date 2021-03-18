@@ -24,3 +24,17 @@ void CPWM::freq_set(float _freqKHz){
       m_freqInTicks = static_cast<uint32_t>(_f);
 }
 
+void CPWM::TZ_enable(eTZChannel _channel, bool _irqEnable){
+    PWM_TZ_ActionConfig(m_pwm, PWM_TZ_Action_ToZero, PWM_TZ_Action_ToZero);
+    PWM_TZ_OneShotCmd(m_pwm, uint32_t(_channel), ENABLE);
+    
+    if (_irqEnable)
+        PWM_TZ_ITCmd(m_pwm, PWM_TZ_ITSource_OneShot, ENABLE);
+    TZ_reset();
+}
+
+void CPWM::TZ_reset(){
+//    PWM_TZ_ITPendClear(m_pwm);
+    PWM_TZ_ITStatusClear(m_pwm, PWM_TZ_ITStatus_All);
+}
+

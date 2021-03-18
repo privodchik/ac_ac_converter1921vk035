@@ -5,7 +5,7 @@
 #define _CPIN_H
 
 #include "IPheriphery.h"
-#include "niietcm4.h"
+#include "niietcm4_gpio.h"
 
 class CPin : public IPheriphery
 {

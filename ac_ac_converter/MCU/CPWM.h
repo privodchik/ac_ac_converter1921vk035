@@ -31,6 +31,16 @@ class CPWM : public IPheriphery{
         PWM_7 = NT_PWM7_BASE
     };
     
+    enum class eTZChannel : uint32_t {
+        Channel_0 = PWM_TZ_Channel_0,
+        Channel_1 = PWM_TZ_Channel_1,
+        Channel_2 = PWM_TZ_Channel_2,
+        Channel_3 = PWM_TZ_Channel_3,
+        Channel_4 = PWM_TZ_Channel_4,
+        Channel_5 = PWM_TZ_Channel_5,
+        Channel_ALL = PWM_TZ_Channel_All                
+    };
+    
   private: 
     NT_PWM_TypeDef* m_pwm;
     float m_freqInKHz;
@@ -90,6 +100,9 @@ class CPWM : public IPheriphery{
       m_pwm->CMPA_bit.CMPA = _cmp;
       m_pwm->CMPB_bit.CMPB = _cmp;
     }
+    
+    void TZ_enable(eTZChannel _channel, bool _irqEnable = false);
+    void TZ_reset();
     
 };
 

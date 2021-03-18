@@ -110,7 +110,8 @@ class CApp{
     friend void SysTick_Handler(void);
     friend void PWM0_IRQHandler(void);
     friend void ADC_SEQ0_IRQHandler(void);
-    
+    friend void PWM0_TZ_IRQHandler(void);    
+    friend void PWM1_TZ_IRQHandler(void);    
 };
 
 

@@ -27,5 +27,8 @@ void CInit::operate(){
 
 void CInit::reset(){
 	IState::reset();
+        __NVIC_EnableIRQ(PWM0_TZ_IRQn);
+        __NVIC_EnableIRQ(PWM1_TZ_IRQn);
+        
 }
 
