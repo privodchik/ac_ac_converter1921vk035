@@ -23,10 +23,12 @@ CApp::CApp(){
     
     sensors[0] = &sens_iFull;
     sensors[1] = &sens_iLoad;
-    sensors[2] = &sens_uBUSP_N;
-    sensors[3] = &sens_uBUSN_N;
-    sensors[4] = &sens_uOut;
-    
+//    sensors[2] = &sens_uBUSP_N;
+//    sensors[3] = &sens_uBUSN_N;
+//    sensors[4] = &sens_uOut;
+    sensors[2] = &sens_uBUS;
+    sensors[3] = &sens_uOut;
+
     IState::state_machine_register(&sm);
     
 }
@@ -45,6 +47,8 @@ void CApp::init(){
     gpio_init();
     modbus_regs_enter_password(modbus1_password);
     modbus1_init();
+    
+    sens_init();
     
     __enable_irq();
 }
@@ -283,6 +287,12 @@ void CApp::state_machine_init(){
 }
 
 
+void CApp::sens_init(){
+    sens_uBUS.correct_coef_set(0.885);
+    sens_uOut.correct_coef_set(0.925);
+}
+
+
 extern CApp app;
 
 void PWM0_IRQHandler(void){
@@ -317,9 +327,10 @@ void ADC_SEQ0_IRQHandler(void){
     
     app.sens_iFull.adc_val_set(adc_modules[0].read());
     app.sens_iLoad.adc_val_set(adc_modules[1].read());
-    app.sens_uBUSP_N.adc_val_set(adc_modules[2].read());
-    app.sens_uBUSN_N.adc_val_set(adc_modules[3].read());
-    app.sens_uOut.adc_val_set(adc_modules[4].read());
+//    app.sens_uBUSP_N.adc_val_set(adc_modules[2].read());
+//    app.sens_uBUSN_N.adc_val_set(adc_modules[3].read());
+    app.sens_uBUS.adc_val_set(adc_modules[4].read());
+    app.sens_uOut.adc_val_set(adc_modules[6].read());
     
     
 //    app.ledWORK.clear();
@@ -367,6 +378,7 @@ inline void acs(iq_t _Ts){
     if (   app.sm.state_name_get() == IState::eState::RUN 
         && app.stRun.m_isRegsInit)
     {
+#ifndef FORM_SIMPLE_U_SINUS
       iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
       iq_t sinus = IQsin(_wt);
       iq_t cosin = IQcos(_wt);
@@ -405,6 +417,17 @@ inline void acs(iq_t _Ts){
       
        iq_t ccr = app.regId.out_est(_err);
        int iCCR = static_cast<int>(IQmpy(ccr,IQ(1250.0)));
+
+       
+       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
+       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
+       
+       app.pwm_A.out_enable();
+       app.pwm_B.out_enable();
+#else
+       iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
+       iq_t sinus = IQsin(_wt);
+       int iCCR = static_cast<int>(IQmpy(IQ(1250), sinus));
        
        app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
        app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
@@ -412,6 +435,7 @@ inline void acs(iq_t _Ts){
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
        
+#endif       
        
     } else if (app.sm.state_name_get() == IState::eState::DIAG){
         

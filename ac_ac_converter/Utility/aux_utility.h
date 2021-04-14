@@ -41,5 +41,7 @@ constexpr std::size_t array_size(T (&)[N]){
     return N;
 }
 
+#define ABS(x) ((x) < 0 ? (-x) : (x))
+
 
 #endif //_UTILITY_H

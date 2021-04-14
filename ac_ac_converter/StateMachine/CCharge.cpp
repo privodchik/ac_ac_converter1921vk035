@@ -46,9 +46,10 @@ char CCharge::task_charge(PT* pt){
 
     if (!timer_expired(&tmr)){
             
-      if (    (app.sens_uBUSP_N.read() >= UBUSPN_MIN)
-          &&  (app.sens_uBUSN_N.read() >= UBUSNN_MIN)
-          )
+//      if (    (app.sens_uBUSP_N.read() >= UBUSPN_MIN)
+//          &&  (app.sens_uBUSN_N.read() >= UBUSNN_MIN)
+//          )
+      if (app.sens_uBUS.read() >= UBUS_MIN)  
       {
           app.sm.state_set(&app.stReady);
           return PT_ENDED;

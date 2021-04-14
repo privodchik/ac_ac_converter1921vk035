@@ -48,15 +48,17 @@ const MODBUS_REG _modbus_holding_regs[] =
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iLoad.scale_get(), QG, Q14), "iLoad[A/dig]")
-   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSP_N.scale_get(), QG, Q9), "uBusPN[V/dig]")
-   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSN_N.scale_get(), QG, Q9), "uBusNN[V/dig]")
+   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUS.scale_get(), QG, Q9), "uBus[V/dig]")
+//   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSP_N.scale_get(), QG, Q9), "uBusPN[V/dig]")
+//   ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uBUSN_N.scale_get(), QG, Q9), "uBusNN[V/dig]")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uOut.scale_get(), QG, Q9), "uOut[V/dig]")
        
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iFull.read(), QG, Q5), "iacN[A]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iLoad.read(), QG, Q5), "iacP[A]")
-   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSP_N.read(), QG, Q5), "uBusPN[V]")
-   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUS.read(), QG, Q5), "uBus[V]")
+//   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSP_N.read(), QG, Q5), "uBusPN[V]")
+//   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uOut.read(), QG, Q5), "uOut[V]")
        
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_regs") // Регуляторы тока

@@ -52,15 +52,17 @@ class CApp{
     CPWM pwm_B{CPWM::ePWM::PWM_1};
     
     //------------Sensors-------------------------------------------------------
-    CSensI sens_iFull{0.017, 59.0, 20.0, 10.0, 2.0, IQ(0.0)};
-    //CSensI sens_iFull{0.017, 59.0, 20.0, 10.0, 2.0, IQ(0.0), true}; // inversion result
-    CSensI sens_iLoad{0.017, 59.0, 20.0, 10.0, 2.0, IQ(0.0)};
+    CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(-29.5)};
+    //CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0.0), true}; // inversion result
+    CSensI sens_iLoad{0.047, 59.0, 20.0, 10.0, 1.0, IQ(-30.0)};
     
-    CSensU sens_uBUSP_N{0.017, 59.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
-    CSensU sens_uBUSN_N{0.017, 59.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
-    CSensU sens_uOut{0.017, 59.0, 20.0, 10.0, 150.0, 2.0, IQ(0.0)};
+//    CSensU sens_uBUSP_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(-18.0)};
+//    CSensU sens_uBUSN_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
     
-    static const int NUM_SENSORS = 5;
+    CSensU sens_uBUS{0.360, 59.0, 20.0, 10.0, 75.0, 2.5, IQ(-230.0)};
+    CSensU sens_uOut{0.360, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(-123.0)};
+    
+    static const int NUM_SENSORS = 4;
     ISens* sensors[NUM_SENSORS];
     
     //------------State Machine-------------------------------------------------
@@ -81,10 +83,10 @@ class CApp{
     
     //------------Regulators ---------------------------------------------------
     
-    CPIReg regUd{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
-    CPIReg regUq{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regUd{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200), -IQ(200)};
+    CPIReg regUq{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200), -IQ(200)};
     
-    CPIReg regId{IQ(0.000025), IQ(1.0), IQ(0.1), IQ(1000), -IQ(1000)};
+    CPIReg regId{IQ(0.000025), IQ(10.0), IQ(0.002), IQ(1.0), -IQ(1.0)};
     //--------------------------------------------------------------------------
     //------------Commands -----------------------------------------------------
     CCmds cmds;
@@ -106,6 +108,7 @@ class CApp{
     void adc_init();
     void uart_init();
     void state_machine_init();
+    void sens_init();
     
     friend void SysTick_Handler(void);
     friend void PWM0_IRQHandler(void);

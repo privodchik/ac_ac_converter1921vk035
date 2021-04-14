@@ -9,7 +9,7 @@
 #include "system_K1921VK01T.h"
 
 // resistances in kOhm 
-#define Uref (3.3)
+#define Uref (1.4)
 #define kADC (4095.0/Uref)   
 
 constexpr uint16_t adc_offset_est(float Roffset,
@@ -56,6 +56,10 @@ class ISens{
     
     #pragma inline = forced
     const iq_t& scale_get()const{return m_kD2A;}
+    
+    void correct_coef_set(float _correct){
+          m_kD2A = IQmpy(m_kD2A, IQ(_correct));
+    }
     
     
     friend void ADC_SEQ0_IRQHandler(void);

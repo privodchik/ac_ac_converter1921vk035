@@ -18,6 +18,22 @@ void IState::non_critical_protect(){
 }
 
 void IState::critical_operate(){
+    if (ABS(app.sens_uBUS.read()) > UBUS_MAX){
+        app.errors.set(CErrors::eError_t::ERROR_BUS_MAX);
+        app.sm.state_set(&app.stFault);
+    }
+    
+    if (ABS(app.sens_uOut.read()) > VAC_AMP_MAX){
+        app.errors.set(CErrors::eError_t::ERROR_CONVERTER_VMAX);
+        app.sm.state_set(&app.stFault);
+    }
+    
+    if (ABS(app.sens_iFull.read()) > IAC_AMP_MAX){
+        app.errors.set(CErrors::eError_t::ERROR_CONVERTER_IMAX);
+        app.sm.state_set(&app.stFault);
+    }
+    
+    
 }
 
 void IState::operate(){

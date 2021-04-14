@@ -28,7 +28,7 @@ class CSensI : public ISens
       
     private:
       
-      #define Uref (3.3)
+      #define Uref (1.4)
       #define kADC (4095.0/Uref)                                               
       
       constexpr iq_t isens_trans_coef_est( float Roffset,
