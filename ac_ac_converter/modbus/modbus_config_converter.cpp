@@ -87,6 +87,14 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm1_chB, 0, 1), "pwm1_chB")
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.km, 0, 1), "km")    
         
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_test")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.m_currentAngle, QG, Q11), "angle")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.m_ccr, QG, Q3), "ccr")
+    ,ModbusReg(SRAM_REG, UINT16_RO(iCCRA), "ccrA")
+    ,ModbusReg(SRAM_REG, UINT16_RO(iCCRB), "ccrB")
+        
+        
+        
         
 };
 

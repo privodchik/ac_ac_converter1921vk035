@@ -61,35 +61,46 @@ class CPWM : public IPheriphery{
     #pragma inline = forced
     void out_enable(){
         m_pwm->AQCTLA &= pwm::SET_STATES_A;
-        m_pwm->AQCTLA |= pwm::SET_STATES_A;
-        
-        m_pwm->AQCTLB &= pwm::SET_STATES_B;
-        m_pwm->AQCTLB |= pwm::SET_STATES_B;
+//        m_pwm->AQCTLA |= pwm::SET_STATES_A;
+//        
+//        m_pwm->AQCTLB &= pwm::SET_STATES_B;
+//        m_pwm->AQCTLB |= pwm::SET_STATES_B;
+         m_pwm->AQCTLA =    0x60;
+         m_pwm->AQCTLB =    0x60;
+         
     }
     void outA_enable(){
-        m_pwm->AQCTLA &= pwm::SET_STATES_A;
-        m_pwm->AQCTLA |= pwm::SET_STATES_A;
+//        m_pwm->AQCTLA &= pwm::SET_STATES_A;
+//        m_pwm->AQCTLA |= pwm::SET_STATES_A;
+         m_pwm->AQCTLA =   0x60;
     }
     void outB_enable(){
-        m_pwm->AQCTLB &= pwm::SET_STATES_B;
-        m_pwm->AQCTLB |= pwm::SET_STATES_B;
+//        m_pwm->AQCTLB &= pwm::SET_STATES_B;
+//        m_pwm->AQCTLB |= pwm::SET_STATES_B;
+         m_pwm->AQCTLB =    0x60;
     }
     
     #pragma inline = forced
     void out_disable(){
-      m_pwm->AQCTLA = 0;
-      m_pwm->AQCTLB = 0;
+//      m_pwm->AQCTLA = 0;
+//      m_pwm->AQCTLB = 0;
+//      
+//      m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
+//      m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
+        m_pwm->AQCTLA = 0x55;
+	m_pwm->AQCTLB = 0xAA;
+        
       
-      m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
-      m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
     }
     void outA_disable(){
-        m_pwm->AQCTLA = 0;
-        m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
+//        m_pwm->AQCTLA = 0;
+//        m_pwm->AQCTLA |= pwm::CLR_STATES_A_OR_B;
+        m_pwm->AQCTLA = 0x55;
     }
     void outB_disable(){
-        m_pwm->AQCTLB = 0;
-        m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
+//        m_pwm->AQCTLB = 0;
+//        m_pwm->AQCTLB |= pwm::CLR_STATES_A_OR_B;
+        m_pwm->AQCTLB = 0xAA;
     }
     
     

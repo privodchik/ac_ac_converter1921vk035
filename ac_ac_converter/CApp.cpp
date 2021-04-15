@@ -153,11 +153,11 @@ void CApp::pwm_init(){
       /* inversion disable*/
     PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
     PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
-    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
+    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
+//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
     
-    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 50; //500 ns
-    PWM_DTG_InitStruct.PWM_DB_FallDelay = 50; //500 ns
+    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 80; //1000 ns
+    PWM_DTG_InitStruct.PWM_DB_FallDelay = 80; //1000 ns
     PWM_DB_Init(NT_PWM0, &PWM_DTG_InitStruct);
     PWM_DB_Init(NT_PWM1, &PWM_DTG_InitStruct);
     
@@ -336,7 +336,7 @@ void ADC_SEQ0_IRQHandler(void){
 //    app.ledWORK.clear();
     
     
-    app.isr(TIME_USEC(50));
+    app.isr(TIME_USEC(1000/FREQ_KHZ));
 
     while (NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FSTAT != 0)
       NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;					  // Check AI FIFO
@@ -371,6 +371,13 @@ void PWM1_TZ_IRQHandler(void){
 
 
 static int fil = 0;
+
+static uint16_t CCR = 1000;
+static uint16_t FR = 400;
+
+uint16_t iCCRA = 0;
+uint16_t iCCRB = 0;
+
 
 #pragma inline = forced
 inline void acs(iq_t _Ts){
@@ -416,21 +423,32 @@ inline void acs(iq_t _Ts){
       
       
        iq_t ccr = app.regId.out_est(_err);
-       int iCCR = static_cast<int>(IQmpy(ccr,IQ(1250.0)));
+       int iCCR = static_cast<int>(IQmpy(ccr,IQ(300.0)));
 
        
-       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
-       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
+       app.pwm_B.cmp_set( iCCR < 0 ? 0 : iCCR);
+       app.pwm_A.cmp_set( iCCR < 0 ? iCCR + 1250 : 1250);
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
 #else
-       iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
+       iq_t _wt = app.stRun.angle_est( FR*6.281593 , _Ts);
        iq_t sinus = IQsin(_wt);
-       int iCCR = static_cast<int>(IQmpy(IQ(1250), sinus));
        
-       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
-       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
+       int iCCR = static_cast<int>(IQmpy(IQ(CCR), sinus));
+       app.stRun.m_ccr = iCCR;
+       
+//       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
+//       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
+       
+       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
+       
+       int _offset = app.pwm_A.freq_in_ticks_get()>>1;
+       
+       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
+       
+       app.pwm_A.cmp_set( iCCRA);
+       app.pwm_B.cmp_set( iCCRB);
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();

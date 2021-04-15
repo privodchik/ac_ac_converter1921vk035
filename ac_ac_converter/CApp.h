@@ -33,6 +33,10 @@
 
 
 
+extern uint16_t iCCRA;
+extern uint16_t iCCRB;
+
+
 
 extern const uint32_t SYSTEM_CLOCK;
 

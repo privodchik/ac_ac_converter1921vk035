@@ -13,8 +13,12 @@
 
 class CRun : public IState
 {
-  private:
+  public:
     iq_t m_currentAngle = 0;
+    
+    iq_t m_ccr = 0;
+    
+  private:
     iq_t m_delWt;
     
   public: 
@@ -52,6 +56,7 @@ class CRun : public IState
 #pragma inline = forced
 inline iq_t CRun::angle_est(iq_t _W, iq_t _Ts){
     iq_t _delWt = IQmpy(_W, _Ts);
+    _delWt = IQmpy(IQ(0.000001), _delWt);
     m_currentAngle += _delWt;
     
     if (m_currentAngle > utl::_PI) m_currentAngle -= utl::_2PI;

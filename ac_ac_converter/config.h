@@ -7,7 +7,7 @@
 
 #include "iqmath.h"
 
-//#define FORM_SIMPLE_U_SINUS 
+#define FORM_SIMPLE_U_SINUS 
 
 
 
@@ -17,7 +17,7 @@
 //-------------------------------------------------------------------
 #define POWER_STR       "10kW"
 
-#define FREQ_KHZ 40.0
+#define FREQ_KHZ 10.0
 
 // --------------- Bus Voltages ------------------------------------------------
 extern const iq_t UBUS_NOM;

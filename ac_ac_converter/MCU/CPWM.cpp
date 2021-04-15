@@ -12,6 +12,8 @@ namespace pwm{
         
     const uint32_t SET_STATES_A = (SW_ON << 4)  | (SW_OFF << 6);
     const uint32_t SET_STATES_B = (SW_OFF << 4) | (SW_ON << 6); 
+//    const uint32_t SET_STATES_A = 0x60;
+//    const uint32_t SET_STATES_B = 0x60; 
     
     const uint32_t CLR_STATES_A_OR_B = SW_OFF | (SW_OFF << 2) 
                                        | (SW_OFF << 4) | (SW_OFF << 6);

@@ -27,6 +27,7 @@ void CRun::reset(){
         m_isRegsInit = false;
 	IState::reset();
         m_currentAngle = 0;
+        m_ccr = 0;
         init_regulators();
         
         m_virtGrid = 0;
