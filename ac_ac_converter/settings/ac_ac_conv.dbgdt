@@ -863,7 +863,7 @@
                     <item>CMCU::system_clock</item>
                     <item>CCR</item>
                     <item>FR</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

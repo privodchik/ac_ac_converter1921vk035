@@ -35,7 +35,7 @@
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>2495090832</Checksum>
+        <Checksum>3869195413</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -75,6 +75,8 @@
         <regBase0>NT_PWM0_TBPRD 10</regBase0>
         <regBase1>NT_PWM0_DBRED 10</regBase1>
         <regBase2>NT_PWM0_DBFED 10</regBase2>
+        <regBase3>NT_PWM1_DBRED 10</regBase3>
+        <regBase4>NT_PWM1_DBFED 10</regBase4>
     </Registers>
     <Trace2>
         <Enabled>0</Enabled>
@@ -130,6 +132,12 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -139,6 +147,10 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>1</Mode>
@@ -156,14 +168,4 @@
         <Probe0>I0</Probe0>
         <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
     </PowerProbe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

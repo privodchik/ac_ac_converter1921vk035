@@ -63,8 +63,8 @@ class CApp{
 //    CSensU sens_uBUSP_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(-18.0)};
 //    CSensU sens_uBUSN_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
     
-    CSensU sens_uBUS{0.360, 59.0, 20.0, 10.0, 75.0, 2.5, IQ(-230.0)};
-    CSensU sens_uOut{0.360, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(-123.0)};
+    CSensU sens_uBUS{0.360, 59.0, 20.0, 10.0, 75.0, 2.5, IQ(-270.0)};
+    CSensU sens_uOut{0.360, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(-118.5)};
     
     static const int NUM_SENSORS = 4;
     ISens* sensors[NUM_SENSORS];

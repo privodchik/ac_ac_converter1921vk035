@@ -156,8 +156,8 @@ void CApp::pwm_init(){
     PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
 //    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
     
-    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 80; //1000 ns
-    PWM_DTG_InitStruct.PWM_DB_FallDelay = 80; //1000 ns
+    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 160; //1000 ns
+    PWM_DTG_InitStruct.PWM_DB_FallDelay = 160; //1000 ns
     PWM_DB_Init(NT_PWM0, &PWM_DTG_InitStruct);
     PWM_DB_Init(NT_PWM1, &PWM_DTG_InitStruct);
     
@@ -244,8 +244,8 @@ void CApp::adc_init(){
     ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
     ADC_InitStruct.ADC_Average = ADC_Average_Disable;
     ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
-//    uint32_t _phase = 300;
-    uint32_t _phase = 0;
+    uint32_t _phase = 300;
+//    uint32_t _phase = 0;
     ADC_InitStruct.ADC_Phase = _phase;
 
     for (int i = 0; i < array_size(adc_modules); i++){
@@ -288,8 +288,8 @@ void CApp::state_machine_init(){
 
 
 void CApp::sens_init(){
-    sens_uBUS.correct_coef_set(0.885);
-    sens_uOut.correct_coef_set(0.925);
+//    sens_uBUS.correct_coef_set(0.885);
+//    sens_uOut.correct_coef_set(0.925);
 }
 
 
@@ -441,11 +441,11 @@ inline void acs(iq_t _Ts){
 //       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
 //       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
        
-       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
+       iCCRB = uint16_t(iCCR < 0 ? 0 : iCCR);
        
        int _offset = app.pwm_A.freq_in_ticks_get()>>1;
        
-       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
+       iCCRA = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
        
        app.pwm_A.cmp_set( iCCRA);
        app.pwm_B.cmp_set( iCCRB);

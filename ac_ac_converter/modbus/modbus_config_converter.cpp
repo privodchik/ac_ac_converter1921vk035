@@ -45,6 +45,8 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=cmd") // Команды управления
     ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.start, 0, 1), "start; gui=button") // запуск/останов двигателя    
         
+        
+        
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iLoad.scale_get(), QG, Q14), "iLoad[A/dig]")
@@ -54,12 +56,19 @@ const MODBUS_REG _modbus_holding_regs[] =
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_uOut.scale_get(), QG, Q9), "uOut[V/dig]")
        
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc")
-   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iFull.read(), QG, Q5), "iacN[A]")
-   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iLoad.read(), QG, Q5), "iacP[A]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iFull.read(), QG, Q5), "iFull[A]")
+   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_iLoad.read(), QG, Q5), "iLoad[A]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUS.read(), QG, Q5), "uBus[V]")
 //   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSP_N.read(), QG, Q5), "uBusPN[V]")
 //   ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uBUSN_N.read(), QG, Q5), "uBusNN[V]")
    ,ModbusReg(SRAM_REG, FLOATIQ_RO(app.sens_uOut.read(), QG, Q5), "uOut[V]")
+       
+       
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_digit")
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sens_uBUS.adc_val_get()), "uBus")
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sens_uOut.adc_val_get()), "uOut")
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sens_iFull.adc_val_get()), "iFull")
+    ,ModbusReg(SRAM_REG, UINT16_RO(app.sens_iLoad.adc_val_get()), "iLoad")
        
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_regs") // Регуляторы тока
     ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_proportional_part, QG, Q10), "regId K")

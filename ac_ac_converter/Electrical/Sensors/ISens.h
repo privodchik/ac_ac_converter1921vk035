@@ -39,6 +39,7 @@ class ISens{
     iq_t        m_realVal = 0;
     iq_t        m_RealOffsetDelta = 0;
     bool        m_inversion = false;
+    uint16_t    m_adcVal = 0;
     
   public:
     constexpr ISens(){}
@@ -47,6 +48,7 @@ class ISens{
     const iq_t& read()const{return m_realVal;}
     
     void adc_val_set(uint16_t _adcVal);
+    inline const uint16_t& adc_val_get()const{return m_adcVal;}
     
     #pragma inline = forced    
     void real_val_set(uint16_t _realVal){m_realVal = _realVal;}
@@ -68,10 +70,14 @@ class ISens{
 
 //#pragma inline = forced
 inline void ISens::adc_val_set(uint16_t _adcVal){
-    iq_t _realVal = m_kD2A * (_adcVal - m_adcOffset);
+    m_adcVal = _adcVal;
+    iq_t _realVal = m_kD2A * (int(_adcVal) - m_adcOffset);
     _realVal -= m_RealOffsetDelta;
     m_realVal = m_inversion ?  -_realVal : _realVal;
 }
+
+
+
 
 
 #endif //_ISENS_H
