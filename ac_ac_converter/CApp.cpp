@@ -290,6 +290,14 @@ void CApp::state_machine_init(){
 void CApp::sens_init(){
 //    sens_uBUS.correct_coef_set(0.885);
 //    sens_uOut.correct_coef_set(0.925);
+    
+    sens_uBUS.correct_offset(2005);
+    sens_uOut.correct_offset(2002);
+    
+    sens_uBUS.gain_set(IQ(0.4596));
+    sens_uOut.gain_set(IQ(0.2298));
+    
+    
 }
 
 
