@@ -53,6 +53,7 @@ class CPWM : public IPheriphery{
     
     void freq_set(float _freqKHz);
     
+    #pragma inline = forced
     uint16_t freq_in_ticks_get()const{
         return m_freqInTicks;
     }

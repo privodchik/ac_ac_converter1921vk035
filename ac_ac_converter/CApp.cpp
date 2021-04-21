@@ -70,6 +70,7 @@ void CApp::run(){
 }
 
 
+#pragma inline = forced
 void CApp::isr(time_t _period){
     
 //    sm.critical_operate();
@@ -93,6 +94,7 @@ void CApp::leds_init(){
     _pin.config_set();
 
     ledWORK.define_pin(_pin);
+    ledWORK.clear();
 }
 
 void CApp::pwm_init(){
@@ -146,18 +148,18 @@ void CApp::pwm_init(){
     PWM_DB_Init_TypeDef PWM_DTG_InitStruct;
     PWM_DB_StructInit(&PWM_DTG_InitStruct);
       /* inversion enable*/
-//    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_AFallBRise;
-//    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActLowCompl;
+    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_AFallBRise;
+    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
+    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActLowCompl;
 
       /* inversion disable*/
-    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
-    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
-//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
+//    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
+//    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
+//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
+////    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
     
-    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 160; //1000 ns
-    PWM_DTG_InitStruct.PWM_DB_FallDelay = 160; //1000 ns
+    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 120; //1000 ns
+    PWM_DTG_InitStruct.PWM_DB_FallDelay = 120; //1000 ns
     PWM_DB_Init(NT_PWM0, &PWM_DTG_InitStruct);
     PWM_DB_Init(NT_PWM1, &PWM_DTG_InitStruct);
     
@@ -291,11 +293,17 @@ void CApp::sens_init(){
 //    sens_uBUS.correct_coef_set(0.885);
 //    sens_uOut.correct_coef_set(0.925);
     
+    sens_iFull.correct_offset(2045);
+    sens_iLoad.correct_offset(2040);
     sens_uBUS.correct_offset(2005);
     sens_uOut.correct_offset(2002);
     
     sens_uBUS.gain_set(IQ(0.4596));
     sens_uOut.gain_set(IQ(0.2298));
+    sens_iLoad.gain_set(0.0787);
+    sens_iFull.gain_set(0.0787);
+    
+    
     
     
 }
@@ -316,22 +324,26 @@ void PWM0_IRQHandler(void){
 void ADC_SEQ0_IRQHandler(void){
     
     
-    ADC_SEQ_ITStatusClear(ADC_SEQ_Module_0);
+//    ADC_SEQ_ITStatusClear(ADC_SEQ_Module_0);
+    
+    NT_ADC->ISC = 1<<((uint32_t)ADC_SEQ_Module_0);
     
     
-//    app.ledWORK.set();
+    app.ledWORK.set();
 //    for (int i = 0; i < 11; i++){
 //      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
 //    }
 //    app.ledWORK.clear();
     
     
-    app.ledWORK.set();
+    //app.ledWORK.set();
     
     for (int i = 0; i < array_size(adc_modules); i++){
         uint16_t _adcVal = static_cast<uint16_t>(NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA);
         adc_modules[i].write(_adcVal);
     }
+    
+    
     
     app.sens_iFull.adc_val_set(adc_modules[0].read());
     app.sens_iLoad.adc_val_set(adc_modules[1].read());
@@ -366,6 +378,11 @@ inline void shutdown(){
     
     __NVIC_DisableIRQ(PWM0_TZ_IRQn);
     __NVIC_DisableIRQ(PWM1_TZ_IRQn);
+    
+    __NVIC_ClearPendingIRQ(PWM0_TZ_IRQn);
+    __NVIC_ClearPendingIRQ(PWM1_TZ_IRQn);
+
+    
 }
 
 
@@ -381,10 +398,21 @@ void PWM1_TZ_IRQHandler(void){
 static int fil = 0;
 
 static uint16_t CCR = 1000;
-static uint16_t FR = 400;
+uint16_t FR = 400;
+uint16_t AMP = 100;
 
 uint16_t iCCRA = 0;
 uint16_t iCCRB = 0;
+
+
+//iq_t test_var = 0;
+
+iq_t uRef_d_ = 0;
+iq_t uRef_q_ = 0;
+
+iq_t uOut_d_ = 0;
+iq_t uOut_q_ = 0;
+
 
 
 #pragma inline = forced
@@ -394,20 +422,32 @@ inline void acs(iq_t _Ts){
         && app.stRun.m_isRegsInit)
     {
 #ifndef FORM_SIMPLE_U_SINUS
-      iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
+       app.regUd.config_set();
+       app.regUq.config_set();
+       app.regId.config_set();
+       
+       app.lpf.config_set();
+        
+//      iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
+      iq_t _wt = app.stRun.angle_est( IQmpy(FR, IQ(6.281593)), _Ts);
       iq_t sinus = IQsin(_wt);
       iq_t cosin = IQcos(_wt);
       
 //      iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
-      app.stRun.m_virtGrid = IQmpy(IQ(165.0), cosin); 
+      app.stRun.m_virtGrid = IQmpy(IQ(AMP), cosin); 
       
 //      iq_t uRef_d =  IQmpy(virtGrd, cosin);
 //      iq_t uRef_q = -IQmpy(virtGrd, sinus);
       iq_t uRef_d =  IQmpy(app.stRun.m_virtGrid, cosin);
       iq_t uRef_q = -IQmpy(app.stRun.m_virtGrid, sinus);
+//      uRef_d_ = uRef_d;      
+//      uRef_q_ = uRef_q;      
       
       iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
       iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
+//      uOut_d_ = uOut_d;
+//      uOut_q_ = uOut_q;
+      
       
       iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
       iq_t u_d = app.regUd.out_est(_err);
@@ -424,36 +464,47 @@ inline void acs(iq_t _Ts){
 //            fil/50;
       
       _err  = out;
-      _err -= IQmpy(app.sens_iLoad.read(), IQ(1.0));
+      _err -= IQmpy(app.sens_iFull.read(), IQ(1.0));
       _err += IQmpy(app.sens_iLoad.read(), IQ(0.85));
       _err  = IQdiv(_err, 350.0);
-      _err  = IQdiv(fil, 50); 
+      //_err  += IQdiv(fil, 50); 
       
       
        iq_t ccr = app.regId.out_est(_err);
-       int iCCR = static_cast<int>(IQmpy(ccr,IQ(300.0)));
-
        
-       app.pwm_B.cmp_set( iCCR < 0 ? 0 : iCCR);
-       app.pwm_A.cmp_set( iCCR < 0 ? iCCR + 1250 : 1250);
+       //ccr = app.lpf.out_est(ccr);
+       
+       int _offset = app.pwm_A.freq_in_ticks_get()>>1;
+       
+       int iCCR = static_cast<int>(IQmpy(ccr,IQ(_offset)));
+
+       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
+       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
+       
+       app.pwm_A.cmp_set(iCCRA);
+       app.pwm_B.cmp_set(iCCRB);
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
 #else
        iq_t _wt = app.stRun.angle_est( FR*6.281593 , _Ts);
+       
+       
        iq_t sinus = IQsin(_wt);
+       iq_t cosin = IQcos(_wt);
+       app.stRun.m_virtGrid = IQmpy(IQ(60.0), sinus); 
+       
        
        int iCCR = static_cast<int>(IQmpy(IQ(CCR), sinus));
        app.stRun.m_ccr = iCCR;
        
 //       app.pwm_A.cmp_set( iCCR < 0 ? 0 : iCCR);
 //       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
-       
-       iCCRB = uint16_t(iCCR < 0 ? 0 : iCCR);
-       
+
        int _offset = app.pwm_A.freq_in_ticks_get()>>1;
-       
-       iCCRA = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
+
+       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
+       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
        
        app.pwm_A.cmp_set( iCCRA);
        app.pwm_B.cmp_set( iCCRB);

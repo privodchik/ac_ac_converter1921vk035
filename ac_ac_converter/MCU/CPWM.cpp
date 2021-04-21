@@ -36,7 +36,7 @@ void CPWM::TZ_enable(eTZChannel _channel, bool _irqEnable){
 }
 
 void CPWM::TZ_reset(){
-//    PWM_TZ_ITPendClear(m_pwm);
+    PWM_TZ_ITPendClear(m_pwm);
     PWM_TZ_ITStatusClear(m_pwm, PWM_TZ_ITStatus_All);
 }
 

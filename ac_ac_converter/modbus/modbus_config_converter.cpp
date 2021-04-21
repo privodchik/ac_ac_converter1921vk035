@@ -71,20 +71,36 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, UINT16_RO(app.sens_iLoad.adc_val_get()), "iLoad")
        
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_regs") // Регуляторы тока
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_proportional_part, QG, Q10), "regId K")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_integral_part.m_Ti, QG, Q6), "regId Ti[msec]")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_pos, QG, Q3), "regId Sat_pos")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_neg, QG, Q3), "regId Sat_neg")   
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_proportional_part, QG, Q11), "regId K")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_integral_part.m_Ti, QG, Q11), "regId Ti[msec]")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_pos, QG, Q3), "regId Sat_pos")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_neg, QG, Q3), "regId Sat_neg")   
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_proportional_part, QG, Q11), "regId K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_integral_part.m_Ti, QG, Q11), "regId Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_sat_pos, QG, Q3), "regId Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_sat_neg, QG, Q3), "regId Sat_neg")       
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.out_ref_get(), QG, Q11), "regIdOut")    
+        
     ,ModbusReg(SRAM_REG, RESERVED_, "") 
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_proportional_part, QG, Q10), "regUd K")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_integral_part.m_Ti, QG, Q6), "regUd Ti[msec]")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_pos, QG, Q3), "regUd Sat_pos")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_neg, QG, Q3), "regUd Sat_neg")   
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_proportional_part, QG, Q11), "regUd K")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_integral_part.m_Ti, QG, Q11), "regUd Ti[msec]")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_pos, QG, Q3), "regUd Sat_pos")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUd_shadow.m_sat_neg, QG, Q3), "regUd Sat_neg")   
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUd.m_proportional_part, QG, Q11), "regUd K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUd.m_integral_part.m_Ti, QG, Q11), "regUd Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUd.m_sat_pos, QG, Q3), "regUd Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUd.m_sat_neg, QG, Q3), "regUd Sat_neg")       
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUd.out_ref_get(), QG, Q6), "regUdOut")    
     ,ModbusReg(SRAM_REG, RESERVED_, "")         
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_proportional_part, QG, Q10), "regUq K")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_integral_part.m_Ti, QG, Q6), "regUq Ti[msec]")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_pos, QG, Q3), "regUq Sat_pos")
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_neg, QG, Q3), "regUq Sat_neg")    
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_proportional_part, QG, Q11), "regUq K")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_integral_part.m_Ti, QG, Q11), "regUq Ti[msec]")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_pos, QG, Q3), "regUq Sat_pos")
+//    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regUq_shadow.m_sat_neg, QG, Q3), "regUq Sat_neg")    
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_proportional_part, QG, Q11), "regUq K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_integral_part.m_Ti, QG, Q11), "regUq Ti[msec]")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_sat_pos, QG, Q3), "regUq Sat_pos")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_sat_neg, QG, Q3), "regUq Sat_neg")        
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.out_ref_get(), QG, Q6), "regUqOut")        
         
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_diag")
     ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.diag, 0, 1), "diag; gui=button") // диагностика
@@ -97,12 +113,19 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.km, 0, 1), "km")    
         
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_test")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.m_virtGrid, QG, Q7), "Uref")      
     ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.m_currentAngle, QG, Q11), "angle")
     ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.m_ccr, QG, Q3), "ccr")
     ,ModbusReg(SRAM_REG, UINT16_RO(iCCRA), "ccrA")
     ,ModbusReg(SRAM_REG, UINT16_RO(iCCRB), "ccrB")
         
+    ,ModbusReg(SRAM_REG, FLOATIQ(uRef_d_, QG, Q7), "Uref_d")
+    ,ModbusReg(SRAM_REG, FLOATIQ(uRef_q_, QG, Q7), "Uref_q")
+    ,ModbusReg(SRAM_REG, FLOATIQ(uOut_d_, QG, Q6), "Uout_d")    
+    ,ModbusReg(SRAM_REG, FLOATIQ(uOut_q_, QG, Q6), "Uout_q")    
         
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(FR, 50, 500), "freq")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(AMP, 10, 180), "amp")
         
         
 };

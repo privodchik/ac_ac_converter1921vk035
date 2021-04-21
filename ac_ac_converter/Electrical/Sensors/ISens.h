@@ -76,10 +76,10 @@ class ISens{
 };
 
 
-//#pragma inline = forced
-inline void ISens::adc_val_set(uint16_t _adcVal){
+#pragma inline = forced
+void ISens::adc_val_set(uint16_t _adcVal){
     m_adcVal = _adcVal;
-    iq_t _realVal = m_kD2A * (float(_adcVal) - float(m_adcOffset));
+    iq_t _realVal = m_kD2A * (int(_adcVal) - m_adcOffset);
     _realVal -= m_RealOffsetDelta;
     m_realVal = m_inversion ?  -_realVal : _realVal;
 }

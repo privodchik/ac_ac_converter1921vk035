@@ -7,12 +7,12 @@
 
 #include "iqmath.h"
 
-#define FORM_SIMPLE_U_SINUS 
+//#define FORM_SIMPLE_U_SINUS 
 
 
 
 //-------------------------------------------------------------------
-#define NAME_STR        "NPT-AC_AC-CONVERTOR"
+#define NAME_STR        "NPT-AC_AC-CONVERTER"
 
 //-------------------------------------------------------------------
 #define POWER_STR       "10kW"

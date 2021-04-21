@@ -28,14 +28,26 @@
 #include "CErrors.h"
 
 #include "piregulator.h"
+#include "filter.h"
 
 #include "CCmds.h"
 
 
+extern uint16_t FR;
+extern uint16_t AMP;
 
 extern uint16_t iCCRA;
 extern uint16_t iCCRB;
 
+
+
+//extern iq_t test_var;
+
+extern iq_t uRef_d_;
+extern iq_t uRef_q_;
+
+extern iq_t uOut_d_;
+extern iq_t uOut_q_;
 
 
 extern const uint32_t SYSTEM_CLOCK;
@@ -56,15 +68,15 @@ class CApp{
     CPWM pwm_B{CPWM::ePWM::PWM_1};
     
     //------------Sensors-------------------------------------------------------
-    CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(-29.5)};
+    CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0)};
     //CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0.0), true}; // inversion result
-    CSensI sens_iLoad{0.047, 59.0, 20.0, 10.0, 1.0, IQ(-30.0)};
+    CSensI sens_iLoad{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0)};
     
 //    CSensU sens_uBUSP_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(-18.0)};
 //    CSensU sens_uBUSN_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
     
     CSensU sens_uBUS{0.470, 59.0, 20.0, 10.0, 75.0, 2.5, IQ(0)};
-    CSensU sens_uOut{0.360, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(0)};
+    CSensU sens_uOut{0.470, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(0)};
     
     static const int NUM_SENSORS = 4;
     ISens* sensors[NUM_SENSORS];
@@ -87,10 +99,12 @@ class CApp{
     
     //------------Regulators ---------------------------------------------------
     
-    CPIReg regUd{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200), -IQ(200)};
-    CPIReg regUq{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200), -IQ(200)};
+    CPIReg regUd{IQ(0.000025), IQ(5.0), IQ(0.01), IQ(200), -IQ(200)};
+    CPIReg regUq{IQ(0.000025), IQ(5.0), IQ(0.01), IQ(200), -IQ(200)};
     
-    CPIReg regId{IQ(0.000025), IQ(10.0), IQ(0.002), IQ(1.0), -IQ(1.0)};
+    CPIReg regId{IQ(0.000025), IQ(2.0), IQ(0.002), IQ(1.0), -IQ(1.0)};
+    
+    CFilter lpf{IQ(0.000025), IQ(0.000075), IQ(1000.0), -IQ(1000.0)};
     //--------------------------------------------------------------------------
     //------------Commands -----------------------------------------------------
     CCmds cmds;

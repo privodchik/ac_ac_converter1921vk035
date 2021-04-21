@@ -23,9 +23,9 @@ class CRun : public IState
     
   public: 
     // The regulators are needed to copy parameters to main app.regXx
-    CPIReg regUd_shadow{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
-    CPIReg regUq_shadow{IQ(0.000025), IQ(10.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
-    CPIReg regId_shadow{IQ(0.000025), IQ(10.0), IQ(0.002), IQ(1.0), IQ(-1.0)};
+    CPIReg regUd_shadow{IQ(0.000025), IQ(5.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
+    CPIReg regUq_shadow{IQ(0.000025), IQ(5.0), IQ(0.01), IQ(200.0), IQ(-200.0)};
+    CPIReg regId_shadow{IQ(0.000025), IQ(5.0), IQ(0.002), IQ(1.0), IQ(-1.0)};
     
     bool m_isRegsInit = false;
     
