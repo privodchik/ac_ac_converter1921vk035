@@ -17,12 +17,13 @@ class CCmds{
       uint16_t rst;
       uint16_t diag;
 
-      uint16_t pwm[eQ5];
+      uint16_t pwm[eQ6];
       uint16_t& pwm0_chA;
       uint16_t& pwm0_chB;
       uint16_t& pwm1_chA;
       uint16_t& pwm1_chB;
       uint16_t& km;
+      uint16_t& fun;
     
     public:
       CCmds();

@@ -12,6 +12,10 @@
 #include "timer.h"
 #include "config.h"
 
+
+#define FUN_ON false
+#define FUN_OFF true
+
 class CStateMachine; 
 
 class IState

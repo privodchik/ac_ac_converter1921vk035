@@ -48,6 +48,9 @@ extern iq_t uRef_q_;
 
 extern iq_t uOut_d_;
 extern iq_t uOut_q_;
+extern iq_t uOut_;
+
+extern uint16_t simple_sin;
 
 
 extern const uint32_t SYSTEM_CLOCK;
@@ -60,6 +63,9 @@ class CApp{
   public:
     uint32_t counting = 0;
     CLed ledWORK;
+    
+    CPin fun{CPin::ePort::PORT_F, CPin::ePin::Pin_7};
+    
     CADC adc{adc_modules, array_size(adc_modules)};
     CUart mbUart;
     
@@ -122,6 +128,7 @@ class CApp{
     
   private:
     void leds_init();
+    void fun_init();
     void pwm_init();
     void adc_init();
     void uart_init();

@@ -61,7 +61,7 @@ class CPWM : public IPheriphery{
     
     #pragma inline = forced
     void out_enable(){
-        m_pwm->AQCTLA &= pwm::SET_STATES_A;
+//        m_pwm->AQCTLA &= pwm::SET_STATES_A;
 //        m_pwm->AQCTLA |= pwm::SET_STATES_A;
 //        
 //        m_pwm->AQCTLB &= pwm::SET_STATES_B;

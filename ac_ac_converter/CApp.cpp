@@ -41,6 +41,7 @@ void CApp::init(){
     __disable_irq();
 
     leds_init();
+    fun_init();
     pwm_init();
     adc_init();
     
@@ -97,6 +98,18 @@ void CApp::leds_init(){
     ledWORK.clear();
 }
 
+void CApp::fun_init(){
+    fun.direction_set(CPin::eDir::OUT);
+    fun.mode_set(CPin::eMode::IO);
+    fun.out_mode(CPin::eOutMode::PUSH_PULL);
+    fun.pullUp_set(IPheriphery::eState::ON);    
+    fun.out_allow(IPheriphery::eState::ON);
+    fun.config_set();
+    
+    fun.write(FUN_OFF);
+    
+}
+
 void CApp::pwm_init(){
     
     pwm_A.freq_set(FREQ_KHZ);
@@ -134,8 +147,8 @@ void CApp::pwm_init(){
     PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_A = PWM_ChAction_ToOne;
     PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_A = PWM_ChAction_ToZero;
     
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_B =   PWM_ChAction_ToZero;
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_B = PWM_ChAction_ToOne;
+    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_B =   PWM_ChAction_ToOne;
+    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_B = PWM_ChAction_ToZero;
     
     PWM_CMP_InitStruct.PWM_CMPB = PWM_MAX/4;
     PWM_CMP_InitStruct.PWM_CMPA = PWM_MAX/4;
@@ -143,14 +156,18 @@ void CApp::pwm_init(){
     PWM_CMP_Init(NT_PWM0, &PWM_CMP_InitStruct);
     PWM_CMP_Init(NT_PWM1, &PWM_CMP_InitStruct);
     
+    pwm_A.out_disable();
+    pwm_B.out_disable();
+    
+    
     // DTG Initialization
     
     PWM_DB_Init_TypeDef PWM_DTG_InitStruct;
     PWM_DB_StructInit(&PWM_DTG_InitStruct);
       /* inversion enable*/
-    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_AFallBRise;
+    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
     PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActLowCompl;
+    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
 
       /* inversion disable*/
 //    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
@@ -162,6 +179,36 @@ void CApp::pwm_init(){
     PWM_DTG_InitStruct.PWM_DB_FallDelay = 120; //1000 ns
     PWM_DB_Init(NT_PWM0, &PWM_DTG_InitStruct);
     PWM_DB_Init(NT_PWM1, &PWM_DTG_InitStruct);
+    
+    
+    
+    
+    pwm_A.out_disable();
+    pwm_B.out_disable();
+    
+    
+     //ADC starts from PWM0 event
+    PWM_ET_Init_TypeDef PWM_ET_InitStruct;
+    PWM_ET_StructInit(&PWM_ET_InitStruct);
+    PWM_ET_InitStruct.PWM_ET_Event_A = PWM_Event_CTREqZero;
+    PWM_ET_InitStruct.PWM_ET_Period_A = 0;
+    PWM_ET_Init(NT_PWM0, &PWM_ET_InitStruct);
+    PWM_ET_Cmd(NT_PWM0, PWM_ET_Channel_A, ENABLE);
+    
+    pwm_A.out_disable();
+    pwm_B.out_disable();
+    
+   
+    PWM_PrescCmd(PWM_Presc_0 | PWM_Presc_1, ENABLE);
+    
+    __NVIC_EnableIRQ(PWM0_IRQn);
+    PWM_ITConfig(NT_PWM0, PWM_Event_CTREqZero, 0);
+    PWM_ITCmd(NT_PWM0, ENABLE);
+    
+    
+    pwm_A.out_disable();
+    pwm_B.out_disable();
+    
     
     
     // PWM Pins Configuration
@@ -186,26 +233,6 @@ void CApp::pwm_init(){
      // PWM_B1
     _pin.pin_set(CPin::ePin::Pin_11);
     _pin.config_set();
-    
-     //ADC starts from PWM0 event
-    PWM_ET_Init_TypeDef PWM_ET_InitStruct;
-    PWM_ET_StructInit(&PWM_ET_InitStruct);
-    PWM_ET_InitStruct.PWM_ET_Event_A = PWM_Event_CTREqZero;
-    PWM_ET_InitStruct.PWM_ET_Period_A = 0;
-    PWM_ET_Init(NT_PWM0, &PWM_ET_InitStruct);
-    PWM_ET_Cmd(NT_PWM0, PWM_ET_Channel_A, ENABLE);
-    
-    
-    
-    pwm_A.out_disable();
-    pwm_B.out_disable();    
-    
-    PWM_PrescCmd(PWM_Presc_0 | PWM_Presc_1, ENABLE);
-    
-    __NVIC_EnableIRQ(PWM0_IRQn);
-    PWM_ITConfig(NT_PWM0, PWM_Event_CTREqZero, 0);
-    PWM_ITCmd(NT_PWM0, ENABLE);
-    
     
     
     // TZ init
@@ -235,49 +262,156 @@ void CApp::pwm_init(){
 
 void CApp::adc_init(){
     
-    for (int i = 0; i < 24; i++)
-      ADC_DC_DeInit(static_cast<ADC_DC_Module_TypeDef>(i));
+//    for (int i = 0; i < 24; i++)
+//      ADC_DC_DeInit(static_cast<ADC_DC_Module_TypeDef>(i));
+//
+//    RCC_PeriphClkCmd(RCC_PeriphClk_ADC, ENABLE);
+//
+//
+//    ADC_Init_TypeDef ADC_InitStruct;
+//    ADC_StructInit(&ADC_InitStruct);
+//    ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
+//    ADC_InitStruct.ADC_Average = ADC_Average_Disable;
+//    ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
+//    uint32_t _phase = 300;
+////    uint32_t _phase = 0;
+//    ADC_InitStruct.ADC_Phase = _phase;
+//
+//    for (int i = 0; i < array_size(adc_modules); i++){
+//        RCC_ADCClkDivConfig(static_cast<RCC_ADCClk_TypeDef>(i), adc.get_module(i).clk_div_get(), ENABLE);
+//        RCC_ADCClkCmd(static_cast<RCC_ADCClk_TypeDef>(i), ENABLE);
+//        ADC_Init(static_cast<ADC_Module_TypeDef>(i), &ADC_InitStruct);
+//        ADC_Cmd(static_cast<ADC_Module_TypeDef>(i), ENABLE);
+//    }
+//
+//    // Sequencers 0 & 1 work from PWM
+//    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
+//    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
+//
+//    ADC_SEQ_InitStruct.ADC_SEQ_StartEvent =   ADC_SEQ_StartEvent_PWM012A;
+//    ADC_SEQ_InitStruct.ADC_SEQ_SWReqEn= ENABLE;
+//    ADC_SEQ_InitStruct.ADC_Channels = ( ADC_Channel_0 | ADC_Channel_2
+//                                       | ADC_Channel_4 | ADC_Channel_6
+//                                       | ADC_Channel_8 | ADC_Channel_10
+//                                       | ADC_Channel_12| ADC_Channel_14
+//                                       | ADC_Channel_16| ADC_Channel_18
+//                                       | ADC_Channel_20);
+//
+//    ADC_SEQ_Init(ADC_SEQ_Module_0, &ADC_SEQ_InitStruct);
+//    ADC_SEQ_ITConfig(ADC_SEQ_Module_0, 1, ENABLE);
+//    ADC_SEQ_ITCmd(ADC_SEQ_Module_0, ENABLE);
+//
+////    for (int i = 0; i < 8; i++)
+////      ADC_SEQ_Cmd(static_cast<ADC_SEQ_Module_TypeDef>(i), ENABLE);
+//    ADC_SEQ_Cmd(ADC_SEQ_Module_0, ENABLE);
+//    __NVIC_EnableIRQ(ADC_SEQ0_IRQn);
+    
+    
+      ADC_Init_TypeDef ADC_InitStruct;
 
-    RCC_PeriphClkCmd(RCC_PeriphClk_ADC, ENABLE);
-
-
-    ADC_Init_TypeDef ADC_InitStruct;
-    ADC_StructInit(&ADC_InitStruct);
-    ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
-    ADC_InitStruct.ADC_Average = ADC_Average_Disable;
-    ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
-    uint32_t _phase = 300;
-//    uint32_t _phase = 0;
-    ADC_InitStruct.ADC_Phase = _phase;
-
-    for (int i = 0; i < array_size(adc_modules); i++){
-        RCC_ADCClkDivConfig(static_cast<RCC_ADCClk_TypeDef>(i), adc.get_module(i).clk_div_get(), ENABLE);
-        RCC_ADCClkCmd(static_cast<RCC_ADCClk_TypeDef>(i), ENABLE);
-        ADC_Init(static_cast<ADC_Module_TypeDef>(i), &ADC_InitStruct);
-        ADC_Cmd(static_cast<ADC_Module_TypeDef>(i), ENABLE);
+	for (uint32_t i = 0; i < 24; i++)
+    {
+        ADC_DC_DeInit((ADC_DC_Module_TypeDef)i);
     }
+		RCC_PeriphClkCmd(RCC_PeriphClk_ADC, ENABLE);
 
-    // Sequencers 0 & 1 work from PWM
-    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
-    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
+	    // ????? ????????? ??????? ?? 6, ? ???????? ???????????? ??? 12???.
+		// Fadc = Fsysclk/(2*(DIV_ADCn + 1))
+        uint8_t ADCDIV = 4;
 
-    ADC_SEQ_InitStruct.ADC_SEQ_StartEvent =   ADC_SEQ_StartEvent_PWM012A;
-    ADC_SEQ_InitStruct.ADC_SEQ_SWReqEn= ENABLE;
-    ADC_SEQ_InitStruct.ADC_Channels = ( ADC_Channel_0 | ADC_Channel_2
-                                       | ADC_Channel_4 | ADC_Channel_6
-                                       | ADC_Channel_8 | ADC_Channel_10
-                                       | ADC_Channel_12| ADC_Channel_14
-                                       | ADC_Channel_16| ADC_Channel_18
-                                       | ADC_Channel_20);
+        RCC_ADCClkDivConfig(RCC_ADCClk_0,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_1,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_2,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_3,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_4,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_5,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_6,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_7,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_8,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_9,ADCDIV, ENABLE);
+        RCC_ADCClkDivConfig(RCC_ADCClk_10,ADCDIV, ENABLE);
 
-    ADC_SEQ_Init(ADC_SEQ_Module_0, &ADC_SEQ_InitStruct);
-    ADC_SEQ_ITConfig(ADC_SEQ_Module_0, 1, ENABLE);
-    ADC_SEQ_ITCmd(ADC_SEQ_Module_0, ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_0,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_1,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_2,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_3,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_4,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_5,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_6,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_7,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_8,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_9,ENABLE);
+        RCC_ADCClkCmd(RCC_ADCClk_10,ENABLE);
 
-//    for (int i = 0; i < 8; i++)
-//      ADC_SEQ_Cmd(static_cast<ADC_SEQ_Module_TypeDef>(i), ENABLE);
-    ADC_SEQ_Cmd(ADC_SEQ_Module_0, ENABLE);
-    __NVIC_EnableIRQ(ADC_SEQ0_IRQn);
+        uint8_t dly= 300;
+	    ADC_StructInit(&ADC_InitStruct);
+	    ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
+	    ADC_InitStruct.ADC_Average = ADC_Average_Disable;
+	    ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
+	    ADC_Init(ADC_Module_0, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_1, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_2, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_3, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_4, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_5, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_6, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_7, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_8, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_9, &ADC_InitStruct);
+	    ADC_InitStruct.ADC_Phase=dly;
+	    ADC_Init(ADC_Module_10, &ADC_InitStruct);
+
+
+	    // ????????? ?????? ???
+	    ADC_Cmd(ADC_Module_0, ENABLE);
+	    ADC_Cmd(ADC_Module_1, ENABLE);
+	    ADC_Cmd(ADC_Module_2, ENABLE);
+	    ADC_Cmd(ADC_Module_3, ENABLE);
+	    ADC_Cmd(ADC_Module_4, ENABLE);
+	    ADC_Cmd(ADC_Module_5, ENABLE);
+	    ADC_Cmd(ADC_Module_6, ENABLE);
+	    ADC_Cmd(ADC_Module_7, ENABLE);
+	    ADC_Cmd(ADC_Module_8, ENABLE);
+	    ADC_Cmd(ADC_Module_9, ENABLE);
+	    ADC_Cmd(ADC_Module_10, ENABLE);
+
+
+	    // ????????? 0,1 ???????? ?? ??????? ???
+	    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
+	    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
+
+	    ADC_SEQ_InitStruct.ADC_SEQ_StartEvent =   ADC_SEQ_StartEvent_PWM012A;
+
+	    ADC_SEQ_InitStruct.ADC_SEQ_SWReqEn= ENABLE;
+
+	    ADC_SEQ_InitStruct.ADC_Channels = ( ADC_Channel_0 | ADC_Channel_2 | ADC_Channel_4 | ADC_Channel_6 | ADC_Channel_8|
+	    								    ADC_Channel_10| ADC_Channel_12| ADC_Channel_14| ADC_Channel_16| ADC_Channel_18 | ADC_Channel_20);
+
+	    ADC_SEQ_Init(ADC_SEQ_Module_0, &ADC_SEQ_InitStruct);
+	    ADC_SEQ_ITConfig(ADC_SEQ_Module_0, 1, ENABLE);
+	    ADC_SEQ_ITCmd(ADC_SEQ_Module_0, ENABLE);
+
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_0, ENABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_1, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_2, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_3, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_4, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_5, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_6, DISABLE);
+	    ADC_SEQ_Cmd(ADC_SEQ_Module_7, DISABLE);
+            
+            
+            NVIC_SetPriority(ADC_SEQ0_IRQn,3);
+            __NVIC_EnableIRQ(ADC_SEQ0_IRQn);
 }
 
 void CApp::uart_init(){
@@ -399,7 +533,7 @@ static int fil = 0;
 
 static uint16_t CCR = 1000;
 uint16_t FR = 400;
-uint16_t AMP = 100;
+uint16_t AMP = 180;
 
 uint16_t iCCRA = 0;
 uint16_t iCCRB = 0;
@@ -413,6 +547,10 @@ iq_t uRef_q_ = 0;
 iq_t uOut_d_ = 0;
 iq_t uOut_q_ = 0;
 
+iq_t uOut_ = 0;
+
+uint16_t simple_sin = 0;
+
 
 
 #pragma inline = forced
@@ -421,7 +559,8 @@ inline void acs(iq_t _Ts){
     if (   app.sm.state_name_get() == IState::eState::RUN 
         && app.stRun.m_isRegsInit)
     {
-#ifndef FORM_SIMPLE_U_SINUS
+//#ifndef FORM_SIMPLE_U_SINUS
+       if(! simple_sin ) {
        app.regUd.config_set();
        app.regUq.config_set();
        app.regId.config_set();
@@ -436,17 +575,17 @@ inline void acs(iq_t _Ts){
 //      iq_t virtGrd = IQmpy(IQ(165.0), cosin); 
       app.stRun.m_virtGrid = IQmpy(IQ(AMP), cosin); 
       
-//      iq_t uRef_d =  IQmpy(virtGrd, cosin);
-//      iq_t uRef_q = -IQmpy(virtGrd, sinus);
+//      iq_t uRef_d =  IQmpy(app.stRun.m_virtGrid, cosin);
+//      iq_t uRef_q = -IQmpy(app.stRun.m_virtGrid, sinus);
       iq_t uRef_d =  IQmpy(app.stRun.m_virtGrid, cosin);
       iq_t uRef_q = -IQmpy(app.stRun.m_virtGrid, sinus);
-//      uRef_d_ = uRef_d;      
-//      uRef_q_ = uRef_q;      
+      uRef_d_ = uRef_d;      
+      uRef_q_ = uRef_q;      
       
       iq_t uOut_d =  IQmpy(app.sens_uOut.read(), cosin);
       iq_t uOut_q = -IQmpy(app.sens_uOut.read(), sinus);
-//      uOut_d_ = uOut_d;
-//      uOut_q_ = uOut_q;
+      uOut_d_ = uOut_d;
+      uOut_q_ = uOut_q;
       
       
       iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
@@ -457,6 +596,8 @@ inline void acs(iq_t _Ts){
 
       // Output current controller
       iq_t out = IQmpy(u_d, cosin) - IQmpy(u_q, sinus);
+      uOut_ = out;
+      
       
 //      _err = (out - 
 //            IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
@@ -465,7 +606,7 @@ inline void acs(iq_t _Ts){
       
       _err  = out;
       _err -= IQmpy(app.sens_iFull.read(), IQ(1.0));
-      _err += IQmpy(app.sens_iLoad.read(), IQ(0.85));
+      _err += IQmpy(app.sens_iLoad.read(), IQ(1.5));
       _err  = IQdiv(_err, 350.0);
       //_err  += IQdiv(fil, 50); 
       
@@ -486,7 +627,9 @@ inline void acs(iq_t _Ts){
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
-#else
+       }
+//#else
+       else{
        iq_t _wt = app.stRun.angle_est( FR*6.281593 , _Ts);
        
        
@@ -511,8 +654,9 @@ inline void acs(iq_t _Ts){
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
+       }
        
-#endif       
+//#endif       
        
     } else if (app.sm.state_name_get() == IState::eState::DIAG){
         

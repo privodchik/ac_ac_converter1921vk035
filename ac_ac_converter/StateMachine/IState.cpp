@@ -41,6 +41,12 @@ void IState::operate(){
     if (app.sm.state_name_get() != IState::eState::RUN){
         if (app.cmds.diag) app.sm.state_set(&app.stDiag);
     }
+    if (app.cmds.fun){
+        app.fun.write(FUN_ON);
+    }
+    else{
+        app.fun.write(FUN_OFF);
+    }
 }
 
 void IState::reset(){

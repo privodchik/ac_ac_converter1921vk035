@@ -17,9 +17,9 @@ void CMCU::init(){
 
 //#define  __CONFIG_VECTOR_TABLE
     __disable_irq();
-//    //SCB->VTOR = 0x20000000;
+    //SCB->VTOR = 0x20000000;
 //    SCB->VTOR = 0x00000000;
-//    NT_BOOTFLASH->T_ACC = 6; 
+    NT_BOOTFLASH->T_ACC = 6; 
 //#define  __CONFIG_CLOCK
 //
 //    NT_COMMON_REG->SYS_CLK_bit.SEL_SRC = uint32_t(eSCR::PLLDIV);
