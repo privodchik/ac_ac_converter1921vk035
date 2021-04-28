@@ -63,6 +63,7 @@ class CApp{
   public:
     uint32_t counting = 0;
     CLed ledWORK;
+    CLed ledADC;
     
     CPin fun{CPin::ePort::PORT_F, CPin::ePin::Pin_7};
     

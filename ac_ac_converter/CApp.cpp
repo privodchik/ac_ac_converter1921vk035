@@ -39,6 +39,10 @@ void CApp::init(){
     CMCU(SYSTEM_CLOCK).init();
     
     __disable_irq();
+    
+    __NVIC_SetPriority(ADC_SEQ0_IRQn, 2);
+    __NVIC_SetPriority(PWM0_IRQn, 1);
+    
 
     leds_init();
     fun_init();
@@ -96,6 +100,19 @@ void CApp::leds_init(){
 
     ledWORK.define_pin(_pin);
     ledWORK.clear();
+    
+    CPin _pin2{CPin::ePort::PORT_E, CPin::ePin::Pin_5}; 
+    
+    _pin2.direction_set(CPin::eDir::OUT);
+    _pin2.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
+    _pin2.mode_set(CPin::eMode::IO);
+    _pin2.out_mode(CPin::eOutMode::PUSH_PULL);
+    _pin2.pullUp_set(IPheriphery::eState::ON);    
+    _pin2.out_allow(IPheriphery::eState::ON);
+    _pin2.config_set();
+    
+    ledADC.define_pin(_pin2);
+    ledADC.clear();
 }
 
 void CApp::fun_init(){
@@ -446,11 +463,17 @@ void CApp::sens_init(){
 extern CApp app;
 
 void PWM0_IRQHandler(void){
+    app.ledWORK.set();
+    
     __NVIC_ClearPendingIRQ(PWM0_IRQn);
     PWM_ITStatusClear(NT_PWM0);
     PWM_ITPendClear(NT_PWM0);
     
-    app.ledWORK.set();
+    app.isr(TIME_USEC(1000/FREQ_KHZ));
+    
+    app.ledWORK.clear();
+    
+    
     
 }
 
@@ -463,7 +486,7 @@ void ADC_SEQ0_IRQHandler(void){
     NT_ADC->ISC = 1<<((uint32_t)ADC_SEQ_Module_0);
     
     
-    app.ledWORK.set();
+    app.ledADC.set();
 //    for (int i = 0; i < 11; i++){
 //      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
 //    }
@@ -490,12 +513,12 @@ void ADC_SEQ0_IRQHandler(void){
 //    app.ledWORK.clear();
     
     
-    app.isr(TIME_USEC(1000/FREQ_KHZ));
+    //app.isr(TIME_USEC(1000/FREQ_KHZ));
 
     while (NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FSTAT != 0)
       NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;					  // Check AI FIFO
 
-    app.ledWORK.clear();
+    app.ledADC.clear();
 }
 
 
@@ -618,6 +641,13 @@ inline void acs(iq_t _Ts){
        int _offset = app.pwm_A.freq_in_ticks_get()>>1;
        
        int iCCR = static_cast<int>(IQmpy(ccr,IQ(_offset)));
+       
+       if (iCCR > 0){
+           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqPeriod;
+       }
+       else{
+           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqZero;
+       }
 
        iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
        iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
@@ -645,6 +675,13 @@ inline void acs(iq_t _Ts){
 //       app.pwm_B.cmp_set(-iCCR < 0 ? 0 : iCCR);
 
        int _offset = app.pwm_A.freq_in_ticks_get()>>1;
+       
+       if (iCCR > 0){
+           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqPeriod;
+       }
+       else{
+           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqZero;
+       }
 
        iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
        iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
