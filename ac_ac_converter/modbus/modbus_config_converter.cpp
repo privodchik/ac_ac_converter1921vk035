@@ -103,7 +103,10 @@ const MODBUS_REG _modbus_holding_regs[] =
 //    ,ModbusReg(SRAM_REG, FLOATIQ_RANGE(app.regUq.m_integral_part.m_Ti, QG, Q11, IQ(0.0005), IQ(1.0)), "regUq Ti[sec]")    
     ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_sat_pos, QG, Q3), "regUq Sat_pos")
     ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.m_sat_neg, QG, Q3), "regUq Sat_neg")        
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.out_ref_get(), QG, Q6), "regUqOut")        
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regUq.out_ref_get(), QG, Q6), "regUqOut")   
+        
+    ,ModbusReg(SRAM_REG, RESERVED_, "")         
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.lpf.m_Tf, QG, Q11), "lpf Tf[sec]")    
         
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_diag")
     ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.diag, 0, 1), "diag; gui=button") // диагностика

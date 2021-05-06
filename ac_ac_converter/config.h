@@ -17,7 +17,7 @@
 //-------------------------------------------------------------------
 #define POWER_STR       "10kW"
 
-#define FREQ_KHZ 40.0
+#define FREQ_KHZ 50.0
 
 // --------------- Bus Voltages ------------------------------------------------
 extern const iq_t UBUS_NOM;

@@ -574,6 +574,14 @@ iq_t uOut_ = 0;
 
 uint16_t simple_sin = 0;
 
+volatile int32_t off1=0;
+volatile int32_t off2=60;
+
+volatile float loadFb = 0.6;
+
+volatile float koef = 50;
+
+
 
 
 #pragma inline = forced
@@ -587,7 +595,6 @@ inline void acs(iq_t _Ts){
        app.regUd.config_set();
        app.regUq.config_set();
        app.regId.config_set();
-       
        app.lpf.config_set();
         
 //      iq_t _wt = app.stRun.angle_est( utl::W , _Ts);
@@ -629,9 +636,9 @@ inline void acs(iq_t _Ts){
       
       _err  = out;
       _err -= IQmpy(app.sens_iFull.read(), IQ(1.0));
-      _err += IQmpy(app.sens_iLoad.read(), IQ(1.5));
+      _err += IQmpy(app.sens_iLoad.read(), IQ(loadFb));
       _err  = IQdiv(_err, 350.0);
-      //_err  += IQdiv(fil, 50); 
+      _err  -= IQdiv(app.lpf.out_est(app.sens_uOut.read()), koef); 
       
       
        iq_t ccr = app.regId.out_est(_err);
@@ -649,8 +656,8 @@ inline void acs(iq_t _Ts){
            NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqZero;
        }
 
-       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);
-       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset : _offset);
+       iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR + off1);
+       iCCRB = uint16_t(iCCR < 0 ? iCCR + _offset + off2 : _offset);
        
        app.pwm_A.cmp_set(iCCRA);
        app.pwm_B.cmp_set(iCCRB);
@@ -691,6 +698,9 @@ inline void acs(iq_t _Ts){
        
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
+       
+       
+       
        }
        
 //#endif       

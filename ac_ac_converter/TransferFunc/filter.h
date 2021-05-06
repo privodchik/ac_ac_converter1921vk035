@@ -8,7 +8,9 @@
 
 class CFilter : public ITransFunc
 {
+  public:
       iq_t m_Tf;
+  private:
       iq_t m_k1;
       iq_t m_k2;
     
