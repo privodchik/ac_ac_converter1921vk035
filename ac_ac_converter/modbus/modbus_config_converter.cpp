@@ -137,6 +137,13 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, UINT16_RANGE(AMP, 10, 180), "amp")
         
         
+    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_errors")   
+    ,ModbusReg(SRAM_REG, UINT16_RO(errorBuffer[0]), "error0")
+    ,ModbusReg(SRAM_REG, UINT16_RO(errorBuffer[1]), "error1")
+    ,ModbusReg(SRAM_REG, UINT16_RO(errorBuffer[2]), "error2")
+    ,ModbusReg(SRAM_REG, UINT16_RO(errorBuffer[3]), "error3")
+    ,ModbusReg(SRAM_REG, UINT16_RO(errorBuffer[4]), "error4")    
+        
 };
 
 

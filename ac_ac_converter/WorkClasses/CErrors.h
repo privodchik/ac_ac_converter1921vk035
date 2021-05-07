@@ -15,15 +15,15 @@ class CErrors
     enum eError_t{
         NOERR                         = 0, 
 
-        ERROR_BUS                     =  100,
-        ERROR_BUS_U                   =  101,
-        ERROR_BUS_MAX                 =  102,
-        ERROR_BUS_MIN                 =  103,
+        ERROR_BUS                     = 100,
+        ERROR_BUS_U                   = 101,
+        ERROR_BUS_MAX                 = 102,
+        ERROR_BUS_MIN                 = 103,
         
-        ERROR_CONVERTER               =  200,
-        ERROR_CONVERTER_VMAX          =  201,
-        ERROR_CONVERTER_VMIN          =  202,
-        ERROR_CONVERTER_VUNBAL        =  203,
+        ERROR_CONVERTER               = 200,
+        ERROR_CONVERTER_VMAX          = 201,
+        ERROR_CONVERTER_VMIN          = 202,
+        ERROR_CONVERTER_VUNBAL        = 203,
         
         ERROR_CONVERTER_IMAX          = 211,
         ERROR_CONVERTER_IMIN          = 212,
