@@ -2680,6 +2680,12 @@
         <file>
             <name>$PROJ_DIR$\WorkClasses\CErrors.h</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\WorkClasses\CRMS.cpp</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\WorkClasses\CRMS.h</name>
+        </file>
     </group>
     <file>
         <name>$PROJ_DIR$\CApp.cpp</name>

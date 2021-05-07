@@ -68,7 +68,36 @@ void CApp::run(){
         gpio_task();
         
         sm.operate();
+        
+        rms_est(TIME_USEC(500));
     }
+    
+}
+
+
+
+char CApp::task_rms(time_t _periodUSEC, PT* pt){
+    
+    static TIMER tmr;
+    
+    PT_BEGIN(pt);
+    this->iInvRms.Ts_set(_periodUSEC*0.000001);
+    timer_set(&tmr, _periodUSEC);
+    
+    while(1){
+        
+      PT_YIELD_UNTIL(pt, timer_expired(&tmr));
+      iInvRms.out_est(sens_iFull.read());
+      timer_advance(&tmr, _periodUSEC);
+      
+    }
+    
+    PT_END(pt);
+}
+
+static PT pt_rms;
+void CApp::rms_est(iq_t _period){
+    task_rms(_period, &pt_rms);
 }
 
 

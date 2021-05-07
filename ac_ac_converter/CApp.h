@@ -32,6 +32,8 @@
 
 #include "CCmds.h"
 
+#include "CRMS.h"
+
 
 extern uint16_t FR;
 extern uint16_t AMP;
@@ -106,17 +108,23 @@ class CApp{
     
     //------------Regulators ---------------------------------------------------
     
-    CPIReg regUd{IQ(0.000025), IQ(2.0), IQ(0.01), IQ(200), -IQ(200)};
-    CPIReg regUq{IQ(0.000025), IQ(1.0), IQ(0.01), IQ(200), -IQ(200)};
+    CPIReg regUd{IQ(1.0/(FREQ_KHZ*1000)), IQ(2.0), IQ(0.01), IQ(200), -IQ(200)};
+    CPIReg regUq{IQ(1.0/(FREQ_KHZ*1000)), IQ(1.0), IQ(0.01), IQ(200), -IQ(200)};
     
-    CPIReg regId{IQ(0.000025), IQ(4.5), IQ(0.0005), IQ(1.0), -IQ(1.0)};
+    CPIReg regId{IQ(1.0/(FREQ_KHZ*1000)), IQ(4.5), IQ(0.0005), IQ(1.0), -IQ(1.0)};
     
-    CFilter lpf{IQ(0.000025), IQ(0.1), IQ(1000.0), -IQ(1000.0)};
+    CFilter lpf{IQ(1.0/(FREQ_KHZ*1000)), IQ(0.1), IQ(1000.0), -IQ(1000.0)};
     //--------------------------------------------------------------------------
     //------------Commands -----------------------------------------------------
     CCmds cmds;
     
     //--------------------------------------------------------------------------
+
+    //------------RMS ----------------------------------------------------------
+    CRMS iInvRms{IQ(1.0/(FREQ_KHZ*1000)), IQ(400.0)};
+    //--------------------------------------------------------------------------
+    
+    
     
     
     
@@ -135,6 +143,10 @@ class CApp{
     void uart_init();
     void state_machine_init();
     void sens_init();
+    
+    void rms_est(iq_t _period);
+  private:
+    PT_THREAD(task_rms(time_t _periodUSEC, PT* pt));
     
     friend void SysTick_Handler(void);
     friend void PWM0_IRQHandler(void);
