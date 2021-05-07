@@ -27,6 +27,7 @@ void CInit::operate(){
 
 void CInit::reset(){
 	IState::reset();
+        app.errors.clr();
         app.pwm_A.TZ_reset();
         app.pwm_B.TZ_reset();
         
@@ -35,6 +36,5 @@ void CInit::reset(){
         
         __NVIC_EnableIRQ(PWM0_TZ_IRQn);
         __NVIC_EnableIRQ(PWM1_TZ_IRQn);
-        
 }
 

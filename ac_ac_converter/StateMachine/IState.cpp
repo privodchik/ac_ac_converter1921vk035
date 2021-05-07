@@ -15,9 +15,9 @@ void IState::critical_protect(){
 }
 
 void IState::non_critical_protect(){
-}
 
-void IState::critical_operate(){
+    if (app.sm.state_name_get() == IState::FAULT) return;
+    
     if (ABS(app.sens_uBUS.read()) > UBUS_MAX){
         app.errors.set(CErrors::eError_t::ERROR_BUS_MAX);
         app.sm.state_set(&app.stFault);
@@ -32,8 +32,11 @@ void IState::critical_operate(){
         app.errors.set(CErrors::eError_t::ERROR_CONVERTER_IMAX);
         app.sm.state_set(&app.stFault);
     }
+}
+
+void IState::critical_operate(){
     
-    
+
 }
 
 void IState::operate(){
@@ -41,6 +44,11 @@ void IState::operate(){
     if (app.sm.state_name_get() != IState::eState::RUN){
         if (app.cmds.diag) app.sm.state_set(&app.stDiag);
     }
+    
+    if (app.sens_iFull.read() > IQ(15)){
+        app.cmds.fun = 1;
+    }
+    
     if (app.cmds.fun){
         app.fun.write(FUN_ON);
     }

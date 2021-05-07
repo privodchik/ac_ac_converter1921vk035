@@ -38,13 +38,14 @@ class CStateMachine
     const IState::eState& state_name_get() const {return m_CurrentStateName;}
     
     void operate(){
+        m_ptrCurrentState->non_critical_protect();
         m_ptrCurrentState->operate();
+        
     }
     
     void critical_operate(){
         m_ptrCurrentState->critical_operate();
     }
-    
     
     
 };

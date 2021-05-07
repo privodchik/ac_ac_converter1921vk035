@@ -62,11 +62,8 @@ void CApp::init(){
 void CApp::run(){
     
     while (true){
-        
-//        (stInit.stInit.*ptrFunc)();
-        
         counting++;
-//        ledWORK.blinking_task(TIME_SEC(5.0));
+
         modbus_rtu_task(); // on uart2
         gpio_task();
         
