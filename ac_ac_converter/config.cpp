@@ -37,3 +37,6 @@ const iq_t VAC_AMP_NOM = IQmpy(VAC_NOM, IQ(1.41));
 const iq_t VAC_AMP_MAX = IQmpy(VAC_AMP_NOM, IQ(1.3));
 
 
+const iq_t CUR_TO_FUN = IQ(10.0);
+
+

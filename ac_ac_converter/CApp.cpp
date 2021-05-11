@@ -69,7 +69,7 @@ void CApp::run(){
         
         sm.operate();
         
-        rms_est(TIME_USEC(500));
+        rms_est(TIME_USEC(100));
     }
     
 }
@@ -79,15 +79,26 @@ void CApp::run(){
 char CApp::task_rms(time_t _periodUSEC, PT* pt){
     
     static TIMER tmr;
+    static TIMER tmr2;
     
     PT_BEGIN(pt);
-    this->iInvRms.Ts_set(_periodUSEC*0.000001);
+    {
+      iq_t _t = IQmpy(IQ(_periodUSEC), IQ(0.0000001));
+      iInvRms.Ts_set(_t);
+    }
     timer_set(&tmr, _periodUSEC);
+    timer_set(&tmr2, TIME_SEC(1.0/FR));
+    
     
     while(1){
         
       PT_YIELD_UNTIL(pt, timer_expired(&tmr));
       iInvRms.out_est(sens_iFull.read());
+      if (timer_expired(&tmr2)){
+          iInvRms.rms_set();
+          iInvRms.out_reset();
+          timer_advance(&tmr2, TIME_SEC(1.0/FR));
+      }
       timer_advance(&tmr, _periodUSEC);
       
     }
@@ -96,8 +107,8 @@ char CApp::task_rms(time_t _periodUSEC, PT* pt){
 }
 
 static PT pt_rms;
-void CApp::rms_est(iq_t _period){
-    task_rms(_period, &pt_rms);
+void CApp::rms_est(time_t _periodUS){
+    task_rms(_periodUS, &pt_rms);
 }
 
 

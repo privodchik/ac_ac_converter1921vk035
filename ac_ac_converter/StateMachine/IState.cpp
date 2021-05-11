@@ -45,8 +45,10 @@ void IState::operate(){
         if (app.cmds.diag) app.sm.state_set(&app.stDiag);
     }
     
-    if (app.sens_iFull.read() > IQ(15)){
+    if (app.iInvRms.rms() > CUR_TO_FUN){
         app.cmds.fun = 1;
+    }else if (app.iInvRms.rms() < (CUR_TO_FUN - IQmpy(CUR_TO_FUN, IQ(0.1)))){
+        app.cmds.fun = 0;
     }
     
     if (app.cmds.fun){

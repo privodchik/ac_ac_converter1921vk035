@@ -31,7 +31,6 @@ class CFilter : public ITransFunc
             
       #pragma inline = forced
       iq_t out_est(iq_t _xk){
-        iq_t _tmp = IQmpy(m_k1, _xk);
         m_yk = IQmpy(m_k1, _xk)  + IQmpy(m_k2, m_yk);
         return out_limit();
       }

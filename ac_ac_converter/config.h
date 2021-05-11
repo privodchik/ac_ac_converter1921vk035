@@ -43,6 +43,9 @@ extern const iq_t VAC_AMP_NOM;
 extern const iq_t VAC_AMP_MAX;
 
 
+extern const iq_t CUR_TO_FUN;
+
+
 
 
 //struct CDeviceConfig{

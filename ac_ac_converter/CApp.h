@@ -144,9 +144,11 @@ class CApp{
     void state_machine_init();
     void sens_init();
     
-    void rms_est(iq_t _period);
+    void rms_est(time_t _periodUSEC);
   private:
     PT_THREAD(task_rms(time_t _periodUSEC, PT* pt));
+    
+  public:  
     
     friend void SysTick_Handler(void);
     friend void PWM0_IRQHandler(void);

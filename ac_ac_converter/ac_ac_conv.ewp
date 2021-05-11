@@ -360,7 +360,7 @@
                     <state>$PROJ_DIR$/../platform/retarget</state>
                     <state>$PROJ_DIR$\MCU</state>
                     <state>$PROJ_DIR$\StateMachine</state>
-                    <state>D:\IAR_Projects\NIIET\ac_ac_converter\ac_ac_converter\Utility</state>
+                    <state>$PROJ_DIR$\Utility</state>
                     <state>$PROJ_DIR$\std_lib</state>
                     <state>$PROJ_DIR$\std_lib\Include</state>
                     <state>$PROJ_DIR$\std_lib\Source</state>
@@ -718,7 +718,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>c.out</state>
+                    <state>ac_ac_converter.out</state>
                 </option>
                 <option>
                     <name>IlinkLibIOConfig</name>
@@ -794,7 +794,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\NIIET\K1921VK01T_FLASH.icf</state>
+                    <state>C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\config\linker\NIIET\K1921VK01T_FLASH.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -965,7 +965,7 @@
                 </option>
                 <option>
                     <name>IlinkOptUseVfe</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>IlinkOptForceVfe</name>
@@ -2163,39 +2163,6 @@
         </group>
         <group>
             <name>Sensors</name>
-            <group>
-                <name>Sensors_FLOAT</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.cpp</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensU.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.cpp</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.h</name>
-                </file>
-            </group>
-            <group>
-                <name>Sensors_Template</name>
-                <excluded>
-                    <configuration>Debug</configuration>
-                </excluded>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\TCSensI.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\TISens.h</name>
-                </file>
-            </group>
             <file>
                 <name>$PROJ_DIR$\Electrical\Sensors\CSensI.cpp</name>
             </file>

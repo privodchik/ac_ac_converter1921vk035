@@ -2403,33 +2403,6 @@
         </group>
         <group>
             <name>Sensors</name>
-            <group>
-                <name>Sensors_FLOAT</name>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.cpp</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensI.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\CFSensU.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.cpp</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\IFSens.h</name>
-                </file>
-            </group>
-            <group>
-                <name>Sensors_Template</name>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\TCSensI.h</name>
-                </file>
-                <file>
-                    <name>$PROJ_DIR$\Electrical\Sensors\TISens.h</name>
-                </file>
-            </group>
             <file>
                 <name>$PROJ_DIR$\Electrical\Sensors\CSensI.cpp</name>
             </file>
