@@ -85,6 +85,9 @@ char CApp::task_rms(time_t _periodUSEC, PT* pt){
     {
       iq_t _t = IQmpy(IQ(_periodUSEC), IQ(0.0000001));
       iInvRms.Ts_set(_t);
+      iInvRmsLpf.Ts_set(_t);
+      iInvRmsLpf.config_set();
+      
     }
     timer_set(&tmr, _periodUSEC);
     timer_set(&tmr2, TIME_SEC(1.0/FR));
@@ -99,6 +102,8 @@ char CApp::task_rms(time_t _periodUSEC, PT* pt){
           iInvRms.out_reset();
           timer_advance(&tmr2, TIME_SEC(1.0/FR));
       }
+      
+      iInvRmsLpf.out_est(iInvRms.rms());
       timer_advance(&tmr, _periodUSEC);
       
     }

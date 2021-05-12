@@ -46,9 +46,9 @@ void IState::operate(){
     }
     
     if (app.autoStartFun){
-      if (app.iInvRms.rms() > CUR_TO_FUN){
+      if (app.iInvRmsLpf.out_get() > CUR_TO_FUN){
           app.fun.write(FUN_ON);
-      }else if (app.iInvRms.rms() < (CUR_TO_FUN - IQmpy(CUR_TO_FUN, IQ(0.2)))){
+      }else if (app.iInvRmsLpf.out_get() < (CUR_TO_FUN - IQmpy(CUR_TO_FUN, IQ(0.2)))){
           app.fun.write(FUN_OFF);
       }
     }

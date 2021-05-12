@@ -47,6 +47,7 @@ const MODBUS_REG _modbus_holding_regs[] =
         
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_mon")
    ,ModbusReg(FRAM_REG, FLOATIQ_RO(app.iInvRms.rms(), QG, Q5), "rms iFull[A]")    
+   ,ModbusReg(FRAM_REG, FLOATIQ_RO(app.iInvRmsLpf.out_ref_get(), QG, Q5), "LpfRms iFull[A]")        
        
         
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
