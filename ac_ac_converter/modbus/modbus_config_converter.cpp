@@ -45,7 +45,9 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=cmd") // Команды управления
     ,ModbusReg(SRAM_REG, INT16_RANGE(app.cmds.start, 0, 1), "start; gui=button") // запуск/останов двигателя    
         
-        
+   ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_mon")
+   ,ModbusReg(FRAM_REG, FLOATIQ_RO(app.iInvRms.rms(), QG, Q5), "rms iFull[A]")    
+       
         
    ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_conv_adc_scale")
    ,ModbusReg(FRAM_REG, FLOATIQ(app.sens_iFull.scale_get(), QG, Q14), "iFull[A/dig]")
@@ -117,6 +119,7 @@ const MODBUS_REG _modbus_holding_regs[] =
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm1_chA, 0, 1), "pwm1_chA")
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.pwm1_chB, 0, 1), "pwm1_chB")
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.km, 0, 1), "km")
+    ,ModbusReg(SRAM_REG, UINT16_RANGE(app.autoStartFun, 0, 1), "fun_auto")        
     ,ModbusReg(SRAM_REG, UINT16_RANGE(app.cmds.fun, 0, 1), "fun")    
         
     ,ModbusReg(SRAM_REG, RESERVED_, "GROUP=_test")

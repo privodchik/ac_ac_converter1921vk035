@@ -68,6 +68,7 @@ class CApp{
     CLed ledADC;
     
     CPin fun{CPin::ePort::PORT_F, CPin::ePin::Pin_7};
+    bool autoStartFun = true;
     
     CADC adc{adc_modules, array_size(adc_modules)};
     CUart mbUart;

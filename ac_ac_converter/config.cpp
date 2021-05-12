@@ -31,7 +31,7 @@ const iq_t IAC_AMP_MAX = IQmpy(IAC_AMP_NOM, IQ(1.1));
 
 
 
-const iq_t VAC_NOM = IQdiv(IQ(127), IQ(1.41));
+const iq_t VAC_NOM = IQmpy(IQ(127), IQ(1.41));
 
 const iq_t VAC_AMP_NOM = IQmpy(VAC_NOM, IQ(1.41));
 const iq_t VAC_AMP_MAX = IQmpy(VAC_AMP_NOM, IQ(1.3));
