@@ -78,7 +78,7 @@ const MODBUS_REG _modbus_holding_regs[] =
 //    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_integral_part.m_Ti, QG, Q11), "regId Ti[msec]")
 //    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_pos, QG, Q3), "regId Sat_pos")
 //    ,ModbusReg(SRAM_REG, FLOATIQ(app.stRun.regId_shadow.m_sat_neg, QG, Q3), "regId Sat_neg")   
-    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_proportional_part, QG, Q11), "regId K")
+    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_proportional_part, QG, Q13), "regId K")
 //    ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_integral_part.m_Ti, QG, Q11), "regId Ti[sec]")
     ,ModbusReg(SRAM_REG, FLOATIQ_RANGE(app.regId.m_integral_part.m_Ti, QG, Q11, IQ(0.0005), IQ(1.0)), "regId Ti[sec]")    
     ,ModbusReg(SRAM_REG, FLOATIQ(app.regId.m_sat_pos, QG, Q3), "regId Sat_pos")

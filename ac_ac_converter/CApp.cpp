@@ -632,7 +632,6 @@ inline void acs(iq_t _Ts){
     if (   app.sm.state_name_get() == IState::eState::RUN 
         && app.stRun.m_isRegsInit)
     {
-//#ifndef FORM_SIMPLE_U_SINUS
        if(! simple_sin ) {
        app.regUd.config_set();
        app.regUq.config_set();
@@ -660,10 +659,10 @@ inline void acs(iq_t _Ts){
       uOut_q_ = uOut_q;
       
       
-      iq_t _err = IQmpy(uRef_d - uOut_d, IQ(0.1));
+      iq_t _err = uRef_d - uOut_d;
       iq_t u_d = app.regUd.out_est(_err);
 
-      _err = IQmpy(uRef_q - uOut_q, IQ(0.1));
+      _err = uRef_q - uOut_q;
       iq_t u_q = app.regUq.out_est(_err);
 
       // Output current controller
@@ -671,15 +670,9 @@ inline void acs(iq_t _Ts){
       uOut_ = out;
       
       
-//      _err = (out - 
-//            IQmpy(app.sens_iLoad.read(), IQ(1.0)) +
-//            IQmpy(app.sens_iLoad.read(), IQ(0.85)))/350 -
-//            fil/50;
-      
       _err  = out;
       _err -= IQmpy(app.sens_iFull.read(), IQ(1.0));
       _err += IQmpy(app.sens_iLoad.read(), IQ(loadFb));
-      _err  = IQdiv(_err, 350.0);
       _err  -= IQdiv(app.lpf.out_est(app.sens_uOut.read()), koef); 
       
       
@@ -707,7 +700,6 @@ inline void acs(iq_t _Ts){
        app.pwm_A.out_enable();
        app.pwm_B.out_enable();
        }
-//#else
        else{
        iq_t _wt = app.stRun.angle_est( FR*6.281593 , _Ts);
        
@@ -745,7 +737,6 @@ inline void acs(iq_t _Ts){
        
        }
        
-//#endif       
        
     } else if (app.sm.state_name_get() == IState::eState::DIAG){
         
