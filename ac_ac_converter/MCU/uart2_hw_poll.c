@@ -2,7 +2,7 @@
 #include "uart2_gpio.h"
 #include "uart2_hw.h"
 #include "fifo.h"
-#include "niietcm4_uart.h"
+#include "plib035_uart.h"
 
 //-------------------------------------------------------------------
 static UART_OPTIONS uart2_opts = FIXED_BAUD(9600);
@@ -31,7 +31,7 @@ void uart2_init(UART_OPTIONS *opt)
 void uart2_deinit()
 {
     uart2_active = 0;
-    UART_DeInit(NT_UART2);
+    UART_DeInit(UART1);
 }
 
 //-------------------------------------------------------------------
@@ -42,14 +42,14 @@ void uart2_restart(int reinit_hw)
    
     if(reinit_hw) 
     {
-        UART_Cmd(NT_UART2, DISABLE);
-        UART_DeInit(NT_UART2);
+        UART_Cmd(UART1, DISABLE);
+        UART_DeInit(UART1);
     }
 
     FIFO_INIT(uart2_rx_fifo);
     FIFO_INIT(uart2_tx_fifo);
 
-    NT_UART2->RSR_ECR = 0; //clear all flags
+    UART1->RSR = 0; //clear all flags
     uart2_error_flags = 0;
 
     if(reinit_hw) 
@@ -59,24 +59,23 @@ void uart2_restart(int reinit_hw)
 
         // Initialize UART_InitStructure
         UART_StructInit(&UART_InitStructure);
-        UART_InitStructure.UART_ClkFreq = 100000000;
-        UART_InitStructure.UART_BaudRate = baud_rate;
-        UART_InitStructure.UART_DataWidth = UART_DataWidth_8;
+        UART_InitStructure.BaudRate = baud_rate;
+        UART_InitStructure.DataWidth = UART_DataWidth_8;
         
-        UART_InitStructure.UART_StopBit = UART_StopBit_1;
-        if(uart2_opts.stop_bits >= UART_STOP_2) UART_InitStructure.UART_StopBit = UART_StopBit_2;
+        UART_InitStructure.StopBit = UART_StopBit_1;
+        if(uart2_opts.stop_bits >= UART_STOP_2) UART_InitStructure.StopBit = UART_StopBit_2;
 
-        UART_InitStructure.UART_ParityBit = UART_ParityBit_Disable;
-        if(uart2_opts.parity == UART_PARITY_ODD) UART_InitStructure.UART_ParityBit = UART_ParityBit_Odd;
-        if(uart2_opts.parity == UART_PARITY_EVEN) UART_InitStructure.UART_ParityBit = UART_ParityBit_Even;
+        UART_InitStructure.ParityBit = UART_ParityBit_Disable;
+        if(uart2_opts.parity == UART_PARITY_ODD) UART_InitStructure.ParityBit = UART_ParityBit_Odd;
+        if(uart2_opts.parity == UART_PARITY_EVEN) UART_InitStructure.ParityBit = UART_ParityBit_Even;
 
-        UART_InitStructure.UART_FIFOEn = ENABLE;
+        UART_InitStructure.FIFO = ENABLE;
         
-        UART_InitStructure.UART_RxEn = ENABLE;
-        UART_InitStructure.UART_TxEn = ENABLE;
+        UART_InitStructure.Rx = ENABLE;
+        UART_InitStructure.Tx = ENABLE;
 
-        UART_Init(NT_UART2, &UART_InitStructure);
-        UART_Cmd(NT_UART2, ENABLE);
+        UART_Init(UART1, &UART_InitStructure);
+        UART_Cmd(UART1, ENABLE);
     }
 }
 
@@ -144,7 +143,7 @@ int uart2_tx_done()
     if(FIFO_EMPTY(uart2_tx_fifo))
         // check hardware also
         //return (UART_GetFlagStatus(MDR_UART2, UART_FLAG_BUSY) == RESET) ? 1 : 0;   
-        return (NT_UART2->FR & UART_Flag_Busy) ? 0 : 1;
+        return (UART1->FR & UART_Flag_Busy) ? 0 : 1;
     return 0;
 }
 
@@ -157,9 +156,9 @@ void uart2_hw_task()
     if(!uart2_active) return;
 
     // RX
-    while(UART_FlagStatus(NT_UART2, UART_Flag_RxFIFOEmpty) != Flag_SET)  
+    while(UART_FlagStatus(UART1, UART_Flag_RxFIFOEmpty) != SET)  
     {
-        word = UART_RecieveData(NT_UART2);
+        word = UART_RecieveData(UART1);
     #if UART2_DEBUG
         uart2_rx_word = word;
         uart2_rx_cnt++;
@@ -185,7 +184,7 @@ void uart2_hw_task()
     }
    
     // TX
-    while(UART_FlagStatus(NT_UART2, UART_Flag_TxFIFOFull) != Flag_SET)  
+    while(UART_FlagStatus(UART1, UART_Flag_TxFIFOFull) != SET)  
     {
         if(FIFO_EMPTY(uart2_tx_fifo))
             break;
@@ -193,7 +192,7 @@ void uart2_hw_task()
     #if UART2_DEBUG
         uart2_tx_cnt++;
     #endif            
-        UART_SendData(NT_UART2, (uint16_t)byte);
+        UART_SendData(UART1, (uint16_t)byte);
     }
 }
 

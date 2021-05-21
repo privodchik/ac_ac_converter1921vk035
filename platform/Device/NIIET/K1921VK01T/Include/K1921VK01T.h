@@ -6599,7 +6599,7 @@ typedef struct {
 /*-- CTRL: Control Timer register --------------------------------------------*/
 
 typedef struct {
-  uint32_t ON_                                     :1;                   /*!< Enable Timer */
+  uint32_t ON                                     :1;                   /*!< Enable Timer */
   uint32_t EXTINPUT_EN                            :1;                   /*!< Enable extern */
   uint32_t EXTINPUT_CLK                           :1;                   /*!< Enable extern input clock */
   uint32_t INTEN                                  :1;                   /*!< Enable Timer interrupt */

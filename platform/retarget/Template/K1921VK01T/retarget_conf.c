@@ -81,17 +81,17 @@ void retarget_init()
     NT_COMMON_REG->GPIOPCTLD_bit.PIN11 = GPIO_AltFunc3;
     NT_COMMON_REG->GPIOPCTLE_bit.PIN0 = GPIO_AltFunc3;
 
-    NT_COMMON_REG->GPIODENC = (1 << 3) | (1 << 4);
+    NT_COMMON_REG->GPIODENC |= (1 << 3) | (1 << 4);
     NT_COMMON_REG->GPIOPCTLC_bit.PIN3 = GPIO_AltFunc2;
     NT_COMMON_REG->GPIOPCTLC_bit.PIN4 = GPIO_AltFunc2;
     NT_GPIOC->ALTFUNCSET = (1 << 3) | (1 << 4);
 #elif (RETARGET_UART_NUM == 1)
-    NT_COMMON_REG->GPIODENA = (1 << 3) | (1 << 4);
+    NT_COMMON_REG->GPIODENA |= (1 << 3) | (1 << 4);
     NT_COMMON_REG->GPIOPCTLA_bit.PIN3 = GPIO_AltFunc1;
     NT_COMMON_REG->GPIOPCTLA_bit.PIN4 = GPIO_AltFunc1;
     NT_GPIOA->ALTFUNCSET = (1 << 3) | (1 << 4);
 #elif (RETARGET_UART_NUM == 2)
-    NT_COMMON_REG->GPIODENF = (1 << 10) | (1 << 11);
+    NT_COMMON_REG->GPIODENF |= (1 << 10) | (1 << 11);
     NT_COMMON_REG->GPIOPCTLF_bit.PIN10 = GPIO_AltFunc1;
     NT_COMMON_REG->GPIOPCTLF_bit.PIN11 = GPIO_AltFunc1;
     NT_GPIOF->ALTFUNCSET = (1 << 10) | (1 << 11);
@@ -100,7 +100,7 @@ void retarget_init()
     NT_COMMON_REG->GPIOPCTLF_bit.PIN12 = GPIO_AltFunc3;
     NT_COMMON_REG->GPIOPCTLF_bit.PIN13 = GPIO_AltFunc3;
 
-    NT_COMMON_REG->GPIODEND = (1 << 2) | (1 << 1);
+    NT_COMMON_REG->GPIODEND |= (1 << 2) | (1 << 1);
     NT_COMMON_REG->GPIOPCTLD_bit.PIN2 = GPIO_AltFunc2;
     NT_COMMON_REG->GPIOPCTLD_bit.PIN1 = GPIO_AltFunc2;
     NT_GPIOD->ALTFUNCSET = (1 << 2) | (1 << 1);

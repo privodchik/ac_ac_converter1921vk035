@@ -2,16 +2,11 @@
 // Created: ID
 
 #include "CPin.h"
+#include <utility>
 
-NT_GPIO_TypeDef* CPin::mcuPortsArray[] = {
-     NT_GPIOA,
-     NT_GPIOB,
-     NT_GPIOC,
-     NT_GPIOD,
-     NT_GPIOE,
-     NT_GPIOF,
-     NT_GPIOG,
-     NT_GPIOH
+GPIO_TypeDef* CPin::mcuPortsArray[] = {
+     GPIOA,
+     GPIOB
 };
 
 
@@ -21,6 +16,20 @@ CPin::CPin(ePort _port, ePin _pin) : m_pin(_pin), IPheriphery(){
     pin_set(_pin);
     
 }
+
+//CPin::CPin(const CPin& _pin){
+//    m_portName = _pin.m_portName;
+//    m_port = _pin.m_portName;
+//    m_pin = _pin.m_pin;
+//    GPIO_InitStruct = _pin.GPIO_InitStruct;
+//}
+//
+//CPin::CPin(CPin&& _pin){
+//    m_portName = std::move(_pin.m_portName);
+//    m_port = std::move(_pin.m_portName);
+//    m_pin = std::move(_pin.m_pin);
+//    GPIO_InitStruct = std::move(_pin.GPIO_InitStruct);
+//}
 
 void CPin::port_set(ePort _port){
     m_portName = _port;

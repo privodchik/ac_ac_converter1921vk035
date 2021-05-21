@@ -2,11 +2,9 @@
 
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\bin\armjlink2.dll" 
 
-"D:\IAR_Projects\NIIET\ac_ac_converter\ac_ac_converter\Debug\Exe\ac_ac_converter.out" 
+"D:\IAR_Projects\NIIET\ac_ac_converter1921vk035\ac_ac_converter\Debug\Exe\ac_ac_converter.out" 
 
 --plugin="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\bin\armbat.dll" 
-
---flash_loader="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\arm\config\flashloader\NIIET\FlashK1921VK01T.board" 
 
 
 

@@ -5,8 +5,8 @@
 #define _CPWM_H
 
 #include "IPheriphery.h"
-#include "niietcm4_pwm.h"
-#include "system_K1921VK01T.h"
+#include "plib035_pwm.h"
+#include "system_K1921VK035.h"
 
 namespace pwm{
     extern const uint32_t SW_ON;
@@ -21,34 +21,19 @@ class CPWM : public IPheriphery{
     
   public:
     enum class ePWM : uint32_t {
-        PWM_0 = NT_PWM0_BASE,
-        PWM_1 = NT_PWM1_BASE,        
-        PWM_2 = NT_PWM2_BASE,
-        PWM_3 = NT_PWM3_BASE,
-        PWM_4 = NT_PWM4_BASE,
-        PWM_5 = NT_PWM5_BASE,
-        PWM_6 = NT_PWM6_BASE,
-        PWM_7 = NT_PWM7_BASE
-    };
-    
-    enum class eTZChannel : uint32_t {
-        Channel_0 = PWM_TZ_Channel_0,
-        Channel_1 = PWM_TZ_Channel_1,
-        Channel_2 = PWM_TZ_Channel_2,
-        Channel_3 = PWM_TZ_Channel_3,
-        Channel_4 = PWM_TZ_Channel_4,
-        Channel_5 = PWM_TZ_Channel_5,
-        Channel_ALL = PWM_TZ_Channel_All                
+        PWM_0 = PWM0_BASE,
+        PWM_1 = PWM1_BASE,        
+        PWM_2 = PWM2_BASE,
     };
     
   private: 
-    NT_PWM_TypeDef* m_pwm;
+    PWM_TypeDef* m_pwm;
     float m_freqInKHz;
     uint16_t m_freqInTicks;
     
   public:
     CPWM(ePWM _pwm){ 
-        m_pwm = reinterpret_cast<NT_PWM_TypeDef*>(_pwm);
+        m_pwm = reinterpret_cast<PWM_TypeDef*>(_pwm);
     };
     
     void freq_set(float _freqKHz);
@@ -113,8 +98,8 @@ class CPWM : public IPheriphery{
       m_pwm->CMPB_bit.CMPB = _cmp;
     }
     
-    void TZ_enable(eTZChannel _channel, bool _irqEnable = false);
-    void TZ_reset();
+    void TZ_enable(bool _irqEnable = false);
+    void TZ_IT_reset();
     
 };
 

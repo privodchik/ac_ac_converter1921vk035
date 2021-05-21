@@ -1,1 +1,4 @@
 /ac_ac_converter/Debug
+*.tmp
+*.wsdt
+

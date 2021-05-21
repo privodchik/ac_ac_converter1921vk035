@@ -3,7 +3,7 @@
 
 #include "CApp.h"
 #include "mcu.h"
-#include "niietcm4_rcc.h"
+#include "plib035_rcu.h"
 #include "modbus_regs.h"
 #include "modbus_config.h"
 #include "modbus_rtu.h"
@@ -23,9 +23,6 @@ CApp::CApp(){
     
     sensors[0] = &sens_iFull;
     sensors[1] = &sens_iLoad;
-//    sensors[2] = &sens_uBUSP_N;
-//    sensors[3] = &sens_uBUSN_N;
-//    sensors[4] = &sens_uOut;
     sensors[2] = &sens_uBUS;
     sensors[3] = &sens_uOut;
 
@@ -120,7 +117,6 @@ void CApp::rms_est(time_t _periodUS){
 #pragma inline = forced
 void CApp::isr(time_t _period){
     
-//    sm.critical_operate();
     clock_tick(_period);
     modbus_scope_tick(_period);
     uart_hw_task(); // here or in background loop
@@ -130,43 +126,30 @@ void CApp::isr(time_t _period){
 
 
 void CApp::leds_init(){
-    CPin _pin{CPin::ePort::PORT_E, CPin::ePin::Pin_4}; 
+    CPin _pin{CPin::ePort::PORT_A, CPin::ePin::Pin_12}; 
     
-    _pin.direction_set(CPin::eDir::OUT);
-    _pin.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
     _pin.mode_set(CPin::eMode::IO);
+    _pin.direction_set(CPin::eDir::OUT);
     _pin.out_mode(CPin::eOutMode::PUSH_PULL);
-    _pin.pullUp_set(IPheriphery::eState::ON);    
-    _pin.out_allow(IPheriphery::eState::ON);
+    _pin.in_mode(CPin::eInMode::DISABLE);
+    _pin.pull_mode(CPin::ePullMode::PD);
+    _pin.drive_mode(CPin::eDriveMode::HIGH_FAST);
     _pin.config_set();
 
     ledWORK.define_pin(_pin);
     ledWORK.clear();
-    
-    CPin _pin2{CPin::ePort::PORT_E, CPin::ePin::Pin_5}; 
-    
-    _pin2.direction_set(CPin::eDir::OUT);
-    _pin2.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
-    _pin2.mode_set(CPin::eMode::IO);
-    _pin2.out_mode(CPin::eOutMode::PUSH_PULL);
-    _pin2.pullUp_set(IPheriphery::eState::ON);    
-    _pin2.out_allow(IPheriphery::eState::ON);
-    _pin2.config_set();
-    
-    ledADC.define_pin(_pin2);
-    ledADC.clear();
 }
 
 void CApp::fun_init(){
-    fun.direction_set(CPin::eDir::OUT);
     fun.mode_set(CPin::eMode::IO);
+    fun.direction_set(CPin::eDir::OUT);
     fun.out_mode(CPin::eOutMode::PUSH_PULL);
-    fun.pullUp_set(IPheriphery::eState::ON);    
-    fun.out_allow(IPheriphery::eState::ON);
+    fun.in_mode(CPin::eInMode::DISABLE);
+    fun.pull_mode(CPin::ePullMode::PD);
+    fun.drive_mode(CPin::eDriveMode::HIGH_FAST);
     fun.config_set();
     
     fun.write(FUN_OFF);
-    
 }
 
 void CApp::pwm_init(){
@@ -176,140 +159,122 @@ void CApp::pwm_init(){
     
     const uint32_t PWM_MAX = pwm_A.freq_in_ticks_get(); // or pwm_B.freq_in_ticks_get()
     
-    RCC_PeriphClkCmd(RCC_PeriphClk_PWM0, ENABLE);
-    RCC_PeriphRstCmd(RCC_PeriphRst_PWM0, ENABLE);
-    RCC_PeriphClkCmd(RCC_PeriphClk_PWM1, ENABLE);
-    RCC_PeriphRstCmd(RCC_PeriphRst_PWM1, ENABLE);
+    RCU_APBClkCmd(RCU_APBClk_PWM0, ENABLE);
+    RCU_APBRstCmd(RCU_APBRst_PWM0, ENABLE);
+    RCU_APBClkCmd(RCU_APBClk_PWM1, ENABLE);
+    RCU_APBRstCmd(RCU_APBRst_PWM1, ENABLE);
     
-    PWM_CTR_Init_TypeDef PWM_CTR_InitStruct; 
+//  ----------------------------------------------------------------------------    
+    PWM_TB_Init_TypeDef PWM_TB_InitStruct;
     //Channel_0 is Master
-    PWM_CTR_StructInit(&PWM_CTR_InitStruct);
-    PWM_CTR_InitStruct.PWM_ChAction_CTREqZero_A =  PWM_ChAction_ToZero;
-    PWM_CTR_InitStruct.PWM_CTR_Mode = PWM_CTR_Mode_UpDown;
-    PWM_CTR_InitStruct.PWM_CTR_Dir_Phase = PWM_CTR_Dir_Up;
-    PWM_CTR_InitStruct.PWM_Period = PWM_MAX/2 - 1;
-    PWM_CTR_InitStruct.PWM_CTR_SyncOut = PWM_CTR_SyncOut_CTREqZero;
-    PWM_CTR_Init(NT_PWM0, &PWM_CTR_InitStruct);
-
-    //Channel_1 is Slave
-    PWM_CTR_StructInit(&PWM_CTR_InitStruct);
-    PWM_CTR_InitStruct.PWM_ChAction_CTREqZero_A =  PWM_ChAction_ToZero;
-    PWM_CTR_InitStruct.PWM_CTR_Mode = PWM_CTR_Mode_UpDown;
-    PWM_CTR_InitStruct.PWM_Period = PWM_MAX/2 - 1;
-    PWM_CTR_InitStruct.PWM_CTR_SyncOut=PWM_CTR_SyncOut_SyncIn;
-    PWM_CTR_Init(NT_PWM1, &PWM_CTR_InitStruct);
+    PWM_TB_InitStruct.Halt = PWM_TB_Halt_Free;
+    PWM_TB_InitStruct.ClkDiv = PWM_TB_ClkDiv_1;
+    PWM_TB_InitStruct.ClkDivExtra = PWM_TB_ClkDivExtra_1;    
+    PWM_TB_InitStruct.SyncOut = PWM_TB_SyncOut_CTREqZero;
+    PWM_TB_InitStruct.PhaseSync = ENABLE;
+    PWM_TB_InitStruct.PhaseSyncDir = PWM_TB_Dir_Up;
+    PWM_TB_InitStruct.Phase = 0;
+    PWM_TB_InitStruct.Mode = PWM_TB_Mode_UpDown;
+    PWM_TB_InitStruct.PeriodDirectLoad = DISABLE;
+    PWM_TB_InitStruct.Period = PWM_MAX/2 - 1;
     
+    PWM_TB_Init(PWM0, &PWM_TB_InitStruct);
+    
+    //Channel_1 is Slave
+    PWM_TB_InitStruct.SyncOut = PWM_TB_SyncOut_SyncIn;
+    PWM_TB_InitStruct.Phase = 1;
+    PWM_TB_Init(PWM1, &PWM_TB_InitStruct);
+    
+//  ----------------------------------------------------------------------------
     //Comparators Initialization
     PWM_CMP_Init_TypeDef PWM_CMP_InitStruct;
     PWM_CMP_StructInit(&PWM_CMP_InitStruct);
+
+    PWM_CMP_InitStruct.CmpADirectLoad = DISABLE;
+    PWM_CMP_InitStruct.CmpBDirectLoad = DISABLE;
+    PWM_CMP_InitStruct.LoadEventCmpA = PWM_CMP_LoadEvent_CTREqZero;
+    PWM_CMP_InitStruct.LoadEventCmpB = PWM_CMP_LoadEvent_CTREqZero;
+    PWM_CMP_InitStruct.CmpA = PWM_MAX/4;
+    PWM_CMP_InitStruct.CmpB = PWM_MAX/4;
     
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_A = PWM_ChAction_ToOne;
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_A = PWM_ChAction_ToZero;
+    PWM_CMP_Init(PWM0, &PWM_CMP_InitStruct);
+    PWM_CMP_Init(PWM1, &PWM_CMP_InitStruct);
     
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Up_B =   PWM_ChAction_ToOne;
-    PWM_CMP_InitStruct.PWM_ChAction_CTREqCMPA_Down_B = PWM_ChAction_ToZero;
+//  ----------------------------------------------------------------------------    
+    PWM_AQ_Init_TypeDef PWM_AQ_InitStruct;
+    PWM_AQ_StructInit(&PWM_AQ_InitStruct);
+    PWM_AQ_InitStruct.ActionA_CTREqCMPAUp = PWM_AQ_Action_ToOne;
+    PWM_AQ_InitStruct.ActionA_CTREqCMPADown = PWM_AQ_Action_ToZero;
+    PWM_AQ_InitStruct.ActionB_CTREqCMPAUp = PWM_AQ_Action_ToOne;
+    PWM_AQ_InitStruct.ActionB_CTREqCMPADown = PWM_AQ_Action_ToZero;
     
-    PWM_CMP_InitStruct.PWM_CMPB = PWM_MAX/4;
-    PWM_CMP_InitStruct.PWM_CMPA = PWM_MAX/4;
+    PWM_AQ_Init(PWM0, &PWM_AQ_InitStruct);
+    PWM_AQ_Init(PWM1, &PWM_AQ_InitStruct);
+
+//  ----------------------------------------------------------------------------    
+    pwm_A.out_disable();  // FIXME
+    pwm_B.out_disable();  // FIXME
     
-    PWM_CMP_Init(NT_PWM0, &PWM_CMP_InitStruct);
-    PWM_CMP_Init(NT_PWM1, &PWM_CMP_InitStruct);
-    
-    pwm_A.out_disable();
-    pwm_B.out_disable();
-    
-    
+//  ----------------------------------------------------------------------------        
     // DTG Initialization
-    
     PWM_DB_Init_TypeDef PWM_DTG_InitStruct;
     PWM_DB_StructInit(&PWM_DTG_InitStruct);
-      /* inversion enable*/
-    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
-    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
-
-      /* inversion disable*/
-//    PWM_DTG_InitStruct.PWM_DB_In = PWM_DB_In_ARiseBFall;
-//    PWM_DTG_InitStruct.PWM_DB_Out = PWM_DB_Out_DelayAB;
-//    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHighCompl;
-////    PWM_DTG_InitStruct.PWM_DB_Pol = PWM_DB_Pol_ActHigh;
+    PWM_DTG_InitStruct.In = PWM_DB_In_AFallBRise;
+    PWM_DTG_InitStruct.Polarity = PWM_DB_Polarity_ActiveHighCompl;
+    PWM_DTG_InitStruct.Out = PWM_DB_Out_BypassAB;
+    PWM_DTG_InitStruct.RiseDelay = 120;
+    PWM_DTG_InitStruct.FallDelay = 120;
+    PWM_DB_Init(PWM0, &PWM_DTG_InitStruct);
+    PWM_DB_Init(PWM1, &PWM_DTG_InitStruct);
     
-    PWM_DTG_InitStruct.PWM_DB_RiseDelay = 120; //1000 ns
-    PWM_DTG_InitStruct.PWM_DB_FallDelay = 120; //1000 ns
-    PWM_DB_Init(NT_PWM0, &PWM_DTG_InitStruct);
-    PWM_DB_Init(NT_PWM1, &PWM_DTG_InitStruct);
-    
-    
-    
-    
+//  ----------------------------------------------------------------------------            
     pwm_A.out_disable();
     pwm_B.out_disable();
     
-    
+//  ----------------------------------------------------------------------------                
      //ADC starts from PWM0 event
     PWM_ET_Init_TypeDef PWM_ET_InitStruct;
     PWM_ET_StructInit(&PWM_ET_InitStruct);
-    PWM_ET_InitStruct.PWM_ET_Event_A = PWM_Event_CTREqZero;
-    PWM_ET_InitStruct.PWM_ET_Period_A = 0;
-    PWM_ET_Init(NT_PWM0, &PWM_ET_InitStruct);
-    PWM_ET_Cmd(NT_PWM0, PWM_ET_Channel_A, ENABLE);
+    PWM_ET_InitStruct.EventSOCA = PWM_ET_Event_CTREqZero;
+    PWM_ET_InitStruct.SOCA = ENABLE;
+    PWM_ET_Init(PWM0, &PWM_ET_InitStruct);
     
+//  ----------------------------------------------------------------------------
     pwm_A.out_disable();
     pwm_B.out_disable();
     
-   
-    PWM_PrescCmd(PWM_Presc_0 | PWM_Presc_1, ENABLE);
-    
-    __NVIC_EnableIRQ(PWM0_IRQn);
-    PWM_ITConfig(NT_PWM0, PWM_Event_CTREqZero, 0);
-    PWM_ITCmd(NT_PWM0, ENABLE);
-    
-    
+//  ----------------------------------------------------------------------------    
+    PWM_TB_PrescCmd(PWM_TB_Presc_0 | PWM_TB_Presc_1, ENABLE);
+
+//  ----------------------------------------------------------------------------    
     pwm_A.out_disable();
     pwm_B.out_disable();
     
-    
-    
+//  ----------------------------------------------------------------------------        
     // PWM Pins Configuration
-    // PWM_A0
-    CPin _pin{CPin::ePort::PORT_G, CPin::ePin::Pin_2};
+    CPin _pin{CPin::ePort::PORT_A, CPin::ePin::Pin_8}; // PWM_A0
     _pin.mode_set(CPin::eMode::ALT_FUNC);
-    _pin.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
     _pin.direction_set(CPin::eDir::OUT);
-    _pin.out_allow(IPheriphery::eState::ON);
+    _pin.drive_mode(CPin::eDriveMode::HIGH_FAST);
     _pin.config_set();
     
-    // PWM_A1
-    _pin.pin_set(CPin::ePin::Pin_3);
+    _pin.pin_set(CPin::ePin::Pin_9);    // PWM_B0
     _pin.config_set();
     
-    // PWM_B0
-    _pin.port_set(CPin::ePort::PORT_A);
-    _pin.pin_set(CPin::ePin::Pin_10);
-    _pin.alt_func_set(CPin::eAltFunc::ALTFUNC_3);
+    _pin.pin_set(CPin::ePin::Pin_10);   // PWM_A1
     _pin.config_set();
     
-     // PWM_B1
-    _pin.pin_set(CPin::ePin::Pin_11);
+    _pin.pin_set(CPin::ePin::Pin_11);   // PWM_B1
     _pin.config_set();
     
     
     // TZ init
-    // PWM_A TZ0
-    _pin = CPin(CPin::ePort::PORT_E, CPin::ePin::Pin_8);
-    _pin.mode_set(CPin::eMode::ALT_FUNC);
-    _pin.alt_func_set(CPin::eAltFunc::ALTFUNC_1);
+    _pin.pin_set(CPin::ePin::Pin_7); // PWM_A TZ0
     _pin.direction_set(CPin::eDir::IN);
     _pin.config_set();
     
-    // PWM_B TZ1
-    
-    _pin.pin_set(CPin::ePin::Pin_9);
-    _pin.config_set();
-    
-    
-    pwm_A.TZ_enable(CPWM::eTZChannel::Channel_0, true);
-    pwm_B.TZ_enable(CPWM::eTZChannel::Channel_1, true);
+    pwm_A.TZ_enable(true);
+    pwm_B.TZ_enable(true);
     
     __NVIC_EnableIRQ(PWM0_TZ_IRQn);
     __NVIC_EnableIRQ(PWM1_TZ_IRQn);
@@ -321,156 +286,35 @@ void CApp::pwm_init(){
 
 void CApp::adc_init(){
     
-//    for (int i = 0; i < 24; i++)
-//      ADC_DC_DeInit(static_cast<ADC_DC_Module_TypeDef>(i));
-//
-//    RCC_PeriphClkCmd(RCC_PeriphClk_ADC, ENABLE);
-//
-//
-//    ADC_Init_TypeDef ADC_InitStruct;
-//    ADC_StructInit(&ADC_InitStruct);
-//    ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
-//    ADC_InitStruct.ADC_Average = ADC_Average_Disable;
-//    ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
-//    uint32_t _phase = 300;
-////    uint32_t _phase = 0;
-//    ADC_InitStruct.ADC_Phase = _phase;
-//
-//    for (int i = 0; i < array_size(adc_modules); i++){
-//        RCC_ADCClkDivConfig(static_cast<RCC_ADCClk_TypeDef>(i), adc.get_module(i).clk_div_get(), ENABLE);
-//        RCC_ADCClkCmd(static_cast<RCC_ADCClk_TypeDef>(i), ENABLE);
-//        ADC_Init(static_cast<ADC_Module_TypeDef>(i), &ADC_InitStruct);
-//        ADC_Cmd(static_cast<ADC_Module_TypeDef>(i), ENABLE);
-//    }
-//
-//    // Sequencers 0 & 1 work from PWM
-//    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
-//    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
-//
-//    ADC_SEQ_InitStruct.ADC_SEQ_StartEvent =   ADC_SEQ_StartEvent_PWM012A;
-//    ADC_SEQ_InitStruct.ADC_SEQ_SWReqEn= ENABLE;
-//    ADC_SEQ_InitStruct.ADC_Channels = ( ADC_Channel_0 | ADC_Channel_2
-//                                       | ADC_Channel_4 | ADC_Channel_6
-//                                       | ADC_Channel_8 | ADC_Channel_10
-//                                       | ADC_Channel_12| ADC_Channel_14
-//                                       | ADC_Channel_16| ADC_Channel_18
-//                                       | ADC_Channel_20);
-//
-//    ADC_SEQ_Init(ADC_SEQ_Module_0, &ADC_SEQ_InitStruct);
-//    ADC_SEQ_ITConfig(ADC_SEQ_Module_0, 1, ENABLE);
-//    ADC_SEQ_ITCmd(ADC_SEQ_Module_0, ENABLE);
-//
-////    for (int i = 0; i < 8; i++)
-////      ADC_SEQ_Cmd(static_cast<ADC_SEQ_Module_TypeDef>(i), ENABLE);
-//    ADC_SEQ_Cmd(ADC_SEQ_Module_0, ENABLE);
-//    __NVIC_EnableIRQ(ADC_SEQ0_IRQn);
+// -----------------------------------------------------------------------------
+    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
+    
+    RCU_ADCClkConfig(RCU_PeriphClk_PLLClk, 7, ENABLE); //12.5MHz
+    RCU_ADCClkCmd(ENABLE);
+    RCU_ADCRstCmd(ENABLE);
     
     
-      ADC_Init_TypeDef ADC_InitStruct;
+    //Modul ADC is switched on
+    ADC_AM_Cmd(ENABLE);
 
-	for (uint32_t i = 0; i < 24; i++)
-    {
-        ADC_DC_DeInit((ADC_DC_Module_TypeDef)i);
+    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
+    ADC_SEQ_InitStruct.StartEvent = ADC_SEQ_StartEvent_PWM012A;
+    ADC_SEQ_InitStruct.SWStartEn = DISABLE;
+    ADC_SEQ_InitStruct.Req[ADC_SEQ_ReqNum_0] = ADC_CH_Num_0;
+    ADC_SEQ_InitStruct.Req[ADC_SEQ_ReqNum_1] = ADC_CH_Num_1;
+    ADC_SEQ_InitStruct.Req[ADC_SEQ_ReqNum_2] = ADC_CH_Num_2;
+    ADC_SEQ_InitStruct.Req[ADC_SEQ_ReqNum_3] = ADC_CH_Num_3;
+    ADC_SEQ_InitStruct.ReqMax = ADC_SEQ_ReqNum_3;
+    ADC_SEQ_InitStruct.RestartCount = 0;
+    ADC_SEQ_Init(ADC_SEQ_Num_0, &ADC_SEQ_InitStruct);
+    ADC_SEQ_Cmd(ADC_SEQ_Num_0, ENABLE);
+    while (!ADC_AM_ReadyStatus()) {
     }
-		RCC_PeriphClkCmd(RCC_PeriphClk_ADC, ENABLE);
 
-	    // ????? ????????? ??????? ?? 6, ? ???????? ???????????? ??? 12???.
-		// Fadc = Fsysclk/(2*(DIV_ADCn + 1))
-        uint8_t ADCDIV = 4;
-
-        RCC_ADCClkDivConfig(RCC_ADCClk_0,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_1,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_2,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_3,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_4,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_5,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_6,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_7,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_8,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_9,ADCDIV, ENABLE);
-        RCC_ADCClkDivConfig(RCC_ADCClk_10,ADCDIV, ENABLE);
-
-        RCC_ADCClkCmd(RCC_ADCClk_0,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_1,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_2,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_3,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_4,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_5,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_6,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_7,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_8,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_9,ENABLE);
-        RCC_ADCClkCmd(RCC_ADCClk_10,ENABLE);
-
-        uint8_t dly= 300;
-	    ADC_StructInit(&ADC_InitStruct);
-	    ADC_InitStruct.ADC_Resolution = ADC_Resolution_12bit;
-	    ADC_InitStruct.ADC_Average = ADC_Average_Disable;
-	    ADC_InitStruct.ADC_Mode = ADC_Mode_Active;
-	    ADC_Init(ADC_Module_0, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_1, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_2, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_3, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_4, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_5, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_6, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_7, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_8, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_9, &ADC_InitStruct);
-	    ADC_InitStruct.ADC_Phase=dly;
-	    ADC_Init(ADC_Module_10, &ADC_InitStruct);
-
-
-	    // ????????? ?????? ???
-	    ADC_Cmd(ADC_Module_0, ENABLE);
-	    ADC_Cmd(ADC_Module_1, ENABLE);
-	    ADC_Cmd(ADC_Module_2, ENABLE);
-	    ADC_Cmd(ADC_Module_3, ENABLE);
-	    ADC_Cmd(ADC_Module_4, ENABLE);
-	    ADC_Cmd(ADC_Module_5, ENABLE);
-	    ADC_Cmd(ADC_Module_6, ENABLE);
-	    ADC_Cmd(ADC_Module_7, ENABLE);
-	    ADC_Cmd(ADC_Module_8, ENABLE);
-	    ADC_Cmd(ADC_Module_9, ENABLE);
-	    ADC_Cmd(ADC_Module_10, ENABLE);
-
-
-	    // ????????? 0,1 ???????? ?? ??????? ???
-	    ADC_SEQ_Init_TypeDef ADC_SEQ_InitStruct;
-	    ADC_SEQ_StructInit(&ADC_SEQ_InitStruct);
-
-	    ADC_SEQ_InitStruct.ADC_SEQ_StartEvent =   ADC_SEQ_StartEvent_PWM012A;
-
-	    ADC_SEQ_InitStruct.ADC_SEQ_SWReqEn= ENABLE;
-
-	    ADC_SEQ_InitStruct.ADC_Channels = ( ADC_Channel_0 | ADC_Channel_2 | ADC_Channel_4 | ADC_Channel_6 | ADC_Channel_8|
-	    								    ADC_Channel_10| ADC_Channel_12| ADC_Channel_14| ADC_Channel_16| ADC_Channel_18 | ADC_Channel_20);
-
-	    ADC_SEQ_Init(ADC_SEQ_Module_0, &ADC_SEQ_InitStruct);
-	    ADC_SEQ_ITConfig(ADC_SEQ_Module_0, 1, ENABLE);
-	    ADC_SEQ_ITCmd(ADC_SEQ_Module_0, ENABLE);
-
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_0, ENABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_1, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_2, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_3, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_4, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_5, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_6, DISABLE);
-	    ADC_SEQ_Cmd(ADC_SEQ_Module_7, DISABLE);
-            
-            
-            NVIC_SetPriority(ADC_SEQ0_IRQn,3);
-            __NVIC_EnableIRQ(ADC_SEQ0_IRQn);
+    ADC_SEQ_ITConfig(ADC_SEQ_Num_0, 0, DISABLE);
+    ADC_SEQ_ITCmd(ADC_SEQ_Num_0, ENABLE);
+    NVIC_EnableIRQ(ADC_SEQ0_IRQn);
+// -----------------------------------------------------------------------------    
 }
 
 void CApp::uart_init(){
@@ -508,59 +352,35 @@ void PWM0_IRQHandler(void){
     app.ledWORK.set();
     
     __NVIC_ClearPendingIRQ(PWM0_IRQn);
-    PWM_ITStatusClear(NT_PWM0);
-    PWM_ITPendClear(NT_PWM0);
+    PWM_ITStatusClear(PWM0);
+    PWM_ITPendStatusClear(PWM0);
     
     app.isr(TIME_USEC(1000/FREQ_KHZ));
     
     app.ledWORK.clear();
     
-    
-    
 }
+
+
 
 
 void ADC_SEQ0_IRQHandler(void){
     
+    ADC_SEQ_ITStatusClear(ADC_SEQ_Num_0);
     
-//    ADC_SEQ_ITStatusClear(ADC_SEQ_Module_0);
+    uint16_t _iFull     = ADC_SEQ_GetFIFOData(ADC_SEQ_Num_0);
+    uint16_t _iLoad     = ADC_SEQ_GetFIFOData(ADC_SEQ_Num_0);
+    uint16_t _uBus      = ADC_SEQ_GetFIFOData(ADC_SEQ_Num_0);
+    uint16_t _uUout     = ADC_SEQ_GetFIFOData(ADC_SEQ_Num_0);
     
-    NT_ADC->ISC = 1<<((uint32_t)ADC_SEQ_Module_0);
+    app.sens_iFull.adc_val_set(_iFull);
+    app.sens_iLoad.adc_val_set(_iLoad);
+    app.sens_uBUS.adc_val_set(_uBus);
+    app.sens_uOut.adc_val_set(_uUout);
     
-    
-    app.ledADC.set();
-//    for (int i = 0; i < 11; i++){
-//      adcBuffer[i] = (int16_t) NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;
-//    }
-//    app.ledWORK.clear();
-    
-    
-    //app.ledWORK.set();
-    
-    for (int i = 0; i < array_size(adc_modules); i++){
-        uint16_t _adcVal = static_cast<uint16_t>(NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA);
-        adc_modules[i].write(_adcVal);
-    }
-    
-    
-    
-    app.sens_iFull.adc_val_set(adc_modules[0].read());
-    app.sens_iLoad.adc_val_set(adc_modules[1].read());
-//    app.sens_uBUSP_N.adc_val_set(adc_modules[2].read());
-//    app.sens_uBUSN_N.adc_val_set(adc_modules[3].read());
-    app.sens_uBUS.adc_val_set(adc_modules[4].read());
-    app.sens_uOut.adc_val_set(adc_modules[6].read());
-    
-    
-//    app.ledWORK.clear();
-    
-    
-    //app.isr(TIME_USEC(1000/FREQ_KHZ));
+    while (ADC_SEQ_GetFIFOLoad(ADC_SEQ_Num_0))
+        ADC_SEQ_GetFIFOData(ADC_SEQ_Num_0);
 
-    while (NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FSTAT != 0)
-      NT_ADC->SEQ[(uint32_t) ADC_SEQ_Module_0].FIFO_bit.DATA;					  // Check AI FIFO
-
-    app.ledADC.clear();
 }
 
 
@@ -569,8 +389,8 @@ inline void shutdown(){
     app.sm.state_set(&app.stFault);
 //    __NVIC_ClearPendingIRQ(PWM0_TZ_IRQn);
     
-    app.pwm_A.TZ_reset();
-    app.pwm_B.TZ_reset();
+    app.pwm_A.TZ_IT_reset();
+    app.pwm_B.TZ_IT_reset();
     
     app.pwm_A.out_disable();
     app.pwm_B.out_disable();
@@ -685,10 +505,10 @@ inline void acs(iq_t _Ts){
        int iCCR = static_cast<int>(IQmpy(ccr,IQ(_offset)));
        
        if (iCCR > 0){
-           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqPeriod;
+           PWM0->ETSEL_bit.SOCASEL = PWM_AQ_Event_CTREqPeriod;
        }
        else{
-           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqZero;
+           PWM0->ETSEL_bit.SOCASEL = PWM_AQ_Event_CTREqZero;
        }
 
        iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR + off1);
@@ -718,10 +538,10 @@ inline void acs(iq_t _Ts){
        int _offset = app.pwm_A.freq_in_ticks_get()>>1;
        
        if (iCCR > 0){
-           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqPeriod;
+           PWM0->ETSEL_bit.SOCASEL = PWM_AQ_Event_CTREqPeriod;
        }
        else{
-           NT_PWM0->ETSEL_bit.SOCASEL = PWM_Event_CTREqZero;
+           PWM0->ETSEL_bit.SOCASEL = PWM_AQ_Event_CTREqZero;
        }
 
        iCCRA = uint16_t(iCCR < 0 ? 0 : iCCR);

@@ -15,10 +15,6 @@ uint16_t modbus_slave_id_len = countof(modbus_slave_id);
 //-------------------------------------------------------------------
 
 
-void f(){
-    app.stRun.regId_shadow.m_sat_pos;
-}
-
 const MODBUS_REG _modbus_holding_regs[] =
 {
      ModbusReg(SRAM_REG, RESERVED_, "GROUP=modbus") // Настройки Modbus

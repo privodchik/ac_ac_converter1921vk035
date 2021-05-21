@@ -5,8 +5,8 @@
 #define _CIGBT_H
 
 #include "IControlObj.h"
-#include "niietcm4_pwm.h"
-#include "K1921VK01T.h"
+#include "plib035_pwm.h"
+#include "K1921VK035.h"
 #include "CPWM.h"
 #include "iqmath.h"
 

@@ -5,7 +5,7 @@
 #ifndef _CAPP_H
 #define _CAPP_H
 
-#include "system_K1921VK01T.h"
+#include "system_K1921VK035.h"
 #include "CPin.h"
 #include "CLed.h"
 #include "CADC.h"
@@ -65,12 +65,10 @@ class CApp{
   public:
     uint32_t counting = 0;
     CLed ledWORK;
-    CLed ledADC;
     
-    CPin fun{CPin::ePort::PORT_F, CPin::ePin::Pin_7};
+    CPin fun{CPin::ePort::PORT_A, CPin::ePin::Pin_14};
     bool autoStartFun = true;
     
-    CADC adc{adc_modules, array_size(adc_modules)};
     CUart mbUart;
     
     //----------- PWM-----------------------------------------------------------
@@ -79,12 +77,7 @@ class CApp{
     
     //------------Sensors-------------------------------------------------------
     CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0)};
-    //CSensI sens_iFull{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0.0), true}; // inversion result
     CSensI sens_iLoad{0.047, 59.0, 20.0, 10.0, 1.0, IQ(0)};
-    
-//    CSensU sens_uBUSP_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(-18.0)};
-//    CSensU sens_uBUSN_N{0.360, 20.0, 20.0, 10.0, 150.0, 2.5, IQ(0.0)};
-    
     CSensU sens_uBUS{0.470, 59.0, 20.0, 10.0, 75.0, 2.5, IQ(0)};
     CSensU sens_uOut{0.470, 59.0, 20.0, 10.0, 75.0/2.0, 2.5, IQ(0)};
     
@@ -125,9 +118,6 @@ class CApp{
     CRMS iInvRms{IQ(1.0/(FREQ_KHZ*1000)), IQ(400.0)};
     CFilter iInvRmsLpf{IQ(1.0/(FREQ_KHZ*1000)), IQ(0.1), IQ(1000.0), -IQ(1000.0)};
     //--------------------------------------------------------------------------
-    
-    
-    
     
     
   public:

@@ -19,8 +19,8 @@
  */
 
 //-- Includes ------------------------------------------------------------------
-#include "K1921VK01T.h"
-#include "system_K1921VK01T.h"
+#include "K1921VK035.h"
+#include "system_K1921VK035.h"
 
 #include "CApp.h"
      

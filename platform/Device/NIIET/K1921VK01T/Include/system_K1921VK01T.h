@@ -44,10 +44,8 @@ extern uint32_t SystemCoreClock; // System Clock Frequency (Core Clock)
 extern void SystemInit(void);
 // Updates the SystemCoreClock with current core Clock retrieved from registers
 extern void SystemCoreClockUpdate(void);
-extern void ClkInit(void);
-extern void FPUInit();
 
-//#if defined (__CMCPPARM__)
+#if defined (__CMCPPARM__)
 void NMI_Handler(void);           /* NMI Handler */
 void HardFault_Handler(void);     /* Hard Fault Handler */
 void MemManage_Handler(void);     /* MPU Fault Handler */
@@ -192,7 +190,7 @@ void CAN14_IRQHandler(void);
 void CAN15_IRQHandler(void);
 void RTC_IRQHandler(void);
 void USBOTG_IRQHandler(void);
-//#endif
+#endif
 
 #ifdef __cplusplus
 }

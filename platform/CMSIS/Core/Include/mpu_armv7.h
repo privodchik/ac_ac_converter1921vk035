@@ -22,7 +22,6 @@
  * limitations under the License.
  */
 
-
 #if   defined ( __ICCARM__ )
   #pragma system_include         /* treat file as system include file for MISRA check */
 #elif defined (__clang__)
@@ -178,12 +177,7 @@ __STATIC_INLINE void ARM_MPU_SetRegionEx(uint32_t rnr, uint32_t rbar, uint32_t r
 * \param src Source data is copied from.
 * \param len Amount of data words to be copied.
 */
-
-#ifdef __cplusplus
-__STATIC_INLINE void orderedCpy(volatile uint32_t* dst, const uint32_t* src, uint32_t len)
-#else
 __STATIC_INLINE void orderedCpy(volatile uint32_t* dst, const uint32_t* __RESTRICT src, uint32_t len)
-#endif
 {
   uint32_t i;
   for (i = 0U; i < len; ++i)
@@ -191,7 +185,6 @@ __STATIC_INLINE void orderedCpy(volatile uint32_t* dst, const uint32_t* __RESTRI
     dst[i] = src[i];
   }
 }
-
 
 /** Load the given number of MPU regions from a table.
 * \param table Pointer to the MPU configuration table.
@@ -207,7 +200,5 @@ __STATIC_INLINE void ARM_MPU_Load(ARM_MPU_Region_t const* table, uint32_t cnt)
   }
   orderedCpy(&(MPU->RBAR), &(table->RBAR), cnt*rowWordSize);
 }
-
-
 
 #endif

@@ -2,8 +2,8 @@
 // Created: ID
 
 #include "CSysTick.h"
-#include "K1921VK01T.h"
-#include "system_K1921VK01T.h"
+#include "K1921VK035.h"
+#include "system_K1921VK035.h"
 #include "atomic.h"
 
 time_t CSysTick::sysTickTime_uSec = 0;

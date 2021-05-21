@@ -1,7 +1,7 @@
 #include "uart1_gpio.h"
-#include "niietcm4_gpio.h"
-#include "niietcm4_rcc.h"
-#include "niietcm4_uart.h"
+#include "plib035_gpio.h"
+#include "plib035_rcu.h"
+#include "plib035_uart.h"
 
 //-------------------------------------------------------------------
 void uart1_gpio_clk_init()
@@ -9,21 +9,28 @@ void uart1_gpio_clk_init()
     GPIO_Init_TypeDef GPIO_InitStruct;
     GPIO_StructInit(&GPIO_InitStruct);
 
-#if UART1_PF10_PF11
-    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AltFunc;
-    GPIO_InitStruct.GPIO_AltFunc = GPIO_AltFunc_1;
-    GPIO_InitStruct.GPIO_OutMode = GPIO_OutMode_PP;
-    GPIO_InitStruct.GPIO_Out = GPIO_Out_En;
+#if UART1_PB10_PB11
+    GPIO_Init_TypeDef GPIO_InitStruct;
+    GPIO_StructInit(&GPIO_InitStruct);
+
+    GPIO_InitStruct.Digital = ENABLE;
+    GPIO_InitStruct.Out = ENABLE;
+    GPIO_InitStruct.AltFunc = ENABLE;
     
-    // Configure PORTF pins 10 (UART1_TX)
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
-    GPIO_Init(NT_GPIOF, &GPIO_InitStruct);
+    // Configure PORTB pins 10 (UART0_TX)
+    GPIO_InitStruct.Pin = GPIO_Pin_10;
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
     
-    // Configure PORTF pins 11 (UART1_RX)
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
-    GPIO_Init(NT_GPIOF, &GPIO_InitStruct);
+    // Configure PORTB pins 11 (UART0_RX)
+    GPIO_InitStruct.Pin = GPIO_Pin_11;
+    GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    // UART clock
+    RCU_UARTClkConfig(UART0_Num, RCU_PeriphClk_OSEClk, 0, ENABLE);
+    RCU_UARTClkCmd(UART0_Num, ENABLE);
+    RCU_UARTRstCmd(UART0_Num, ENABLE);
     
-#endif //UART1_PF10_PF11
+#endif //UART1_PB10_PB11
 
 #if UART1_PB6_PB5
     RST_CLK_PCLKcmd(RST_CLK_PCLK_PORTB, ENABLE); // PB6/rx PB5/tx
@@ -49,23 +56,8 @@ void uart1_gpio_clk_init()
 #endif // UART1_PB6_PB5
     
     // UART clock
-    RCC_UARTClkSel(NT_UART3, RCC_UARTClk_SYSCLK);
-    RCC_UARTClkDivConfig(NT_UART3, 0, ENABLE);
-    RCC_UARTClkCmd(NT_UART3, ENABLE);
-    RCC_PeriphRstCmd(RCC_PeriphRst_UART3, ENABLE);
-    
-    
-    // UART Configuration
-//    UART_Init_TypeDef UART_InitStruct;
-//    UART_StructInit(&UART_InitStruct);
-//    UART_InitStruct.UART_BaudRate = 115200;
-//    UART_InitStruct.UART_ClkFreq = SystemCoreClock;
-//    UART_InitStruct.UART_DataWidth = UART_DataWidth_8;
-//    UART_InitStruct.UART_FIFOEn = ENABLE;
-//    UART_InitStruct.UART_ParityBit = UART_ParityBit_Disable;
-//    UART_InitStruct.UART_StopBit = UART_StopBit_1;
-//
-//    UART_Init(NT_UART2, &UART_InitStruct);
-//    UART_Cmd(NT_UART2, ENABLE);
-    
+//    RCC_UARTClkSel(NT_UART3, RCC_UARTClk_SYSCLK);
+//    RCC_UARTClkDivConfig(NT_UART3, 0, ENABLE);
+//    RCC_UARTClkCmd(NT_UART3, ENABLE);
+//    RCC_PeriphRstCmd(RCC_PeriphRst_UART3, ENABLE);
 }

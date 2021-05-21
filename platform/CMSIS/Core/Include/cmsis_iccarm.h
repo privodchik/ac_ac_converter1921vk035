@@ -23,11 +23,8 @@
 //------------------------------------------------------------------------------
 
 
-
-
 #ifndef __CMSIS_ICCARM_H__
 #define __CMSIS_ICCARM_H__
-
 
 #ifndef __ICCARM__
   #error This file should only be compiled by ICCARM
@@ -152,7 +149,6 @@
   #endif
 #endif
 
-        
 #ifndef   __RESTRICT
   #define __RESTRICT restrict
 #endif
@@ -906,5 +902,5 @@ __packed struct  __iar_u32 { uint32_t v; };
 
 #pragma diag_default=Pe940
 #pragma diag_default=Pe177
-  
+
 #endif /* __CMSIS_ICCARM_H__ */

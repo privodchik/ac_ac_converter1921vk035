@@ -22,10 +22,6 @@
 #include "system_K1921VK01T.h"
 #include "K1921VK01T.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //-- Types ---------------------------------------------------------------------
 typedef enum {
     COMMON_REG_SYS_CLK_SEL_SRC_CPE = 0x0,      /*!< select POR clock or XI_OSC by input CPE */
@@ -108,11 +104,10 @@ void SystemCoreClockUpdate(void)
             pll_refclk = 60000000;
         else // NT_COMMON_REG->PLL_CTRL_bit.REFSEL == COMMON_REG_PLL_CTRL_REFSEL_ETH25MHz)
             pll_refclk = 25000000;
-          SystemCoreClock = (pll_refclk * pll_nf) / (pll_nr * pll_od * pll_div);
+        SystemCoreClock = (pll_refclk * pll_nf) / (pll_nr * pll_od * pll_div);
         break;
     }
 }
-
 
 void ClkInit()
 {
@@ -194,7 +189,3 @@ void SystemInit(void)
     ClkInit();
     FPUInit();
 }
-
-#ifdef __cplusplus
-}
-#endif

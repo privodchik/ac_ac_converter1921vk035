@@ -5,7 +5,7 @@
 #define _CPIN_H
 
 #include "IPheriphery.h"
-#include "niietcm4_gpio.h"
+#include "plib035_gpio.h"
 
 class CPin : public IPheriphery
 {
@@ -31,17 +31,11 @@ class CPin : public IPheriphery
     
     enum class ePort{
         PORT_A = 0,
-        PORT_B,
-        PORT_C,
-        PORT_D,
-        PORT_E,
-        PORT_F,
-        PORT_G,
-        PORT_H
+        PORT_B
     };
     
   private:  
-    static NT_GPIO_TypeDef* mcuPortsArray[int(ePort::PORT_H) + 1];
+    static GPIO_TypeDef* mcuPortsArray[int(ePort::PORT_B) + 1];
     
     
   public:
@@ -62,72 +56,105 @@ class CPin : public IPheriphery
     };
     
     enum class eOutMode{
-        PUSH_PULL = 0,
-        OPEN_DRAIN
+        PUSH_PULL = GPIO_OUTMODE_PIN0_PP,
+        OPEN_DRAIN = GPIO_OUTMODE_PIN0_OD,
+        OPEN_SOURCE = GPIO_OUTMODE_PIN0_OS
+    };
+    
+    enum class eInMode{
+        SHMITT = GPIO_INMODE_PIN0_Schmitt,
+        CMOS = GPIO_INMODE_PIN0_CMOS,
+        DISABLE = GPIO_INMODE_PIN0_Disable
+    };
+    
+    enum class ePullMode{
+        DISABLE = GPIO_PULLMODE_PIN0_Disable,
+        PU = GPIO_PULLMODE_PIN0_PU,
+        PD = GPIO_PULLMODE_PIN0_PD
+    };
+    
+    enum class eDriveMode{
+        HIGH_FAST = GPIO_DRIVEMODE_PIN0_HF,
+        HIGH_SLOW = GPIO_DRIVEMODE_PIN0_HS,
+        LOW_FAST = GPIO_DRIVEMODE_PIN0_LF,
+        LOW_SLOW = GPIO_DRIVEMODE_PIN0_LS   
     };
     
     
   private:
     ePort   m_portName;
-    NT_GPIO_TypeDef* m_port;
+    GPIO_TypeDef* m_port;
     ePin m_pin;
     
     GPIO_Init_TypeDef GPIO_InitStruct;
   
   public:
     CPin(ePort _port, ePin _pin);
+//    CPin(const CPin& _pin);
+//    CPin(CPin&& _pin);
+//    ~CPin(){}
+//    
+//    CPin& operator=(const CPin& _pin);
+//    CPin& operator=(CPin&& _pin);
     
     void port_set(ePort _port);
-    NT_GPIO_TypeDef* port_get(){return m_port;}
+    GPIO_TypeDef* port_get(){return m_port;}
     ePort port_name_get(){return m_portName;}
     
     void write(bool _state);
     bool read();
     
     void pin_set(ePin);
-    void alt_func_set(eAltFunc);
-    void direction_set(eDir);
     void mode_set(eMode);
-    void out_allow(eState);
+    void direction_set(eDir);
     void out_mode(eOutMode);
-    void pullUp_set(eState);
+    void in_mode(eInMode);
+    void pull_mode(ePullMode);
+    void drive_mode(eDriveMode);
     void config_set();
     
 };
 
 
+#pragma inline = forced
 inline void CPin::pin_set(ePin _pinNo){
-    GPIO_InitStruct.GPIO_Pin = uint32_t(_pinNo);
+    GPIO_InitStruct.Pin = uint32_t(_pinNo);
 }
 
-inline void CPin::alt_func_set(eAltFunc _func){
-    GPIO_InitStruct.GPIO_AltFunc = static_cast<GPIO_AltFunc_TypeDef>(_func);
-}
-
+#pragma inline = forced
 inline void CPin::direction_set(eDir _dir){
-      GPIO_InitStruct.GPIO_Dir = static_cast<GPIO_Dir_TypeDef>(_dir);
+      GPIO_InitStruct.Out = static_cast<FunctionalState>(_dir);
 }
 
+#pragma inline = forced
 inline void CPin::mode_set(eMode _mode){
-      GPIO_InitStruct.GPIO_Mode = static_cast<GPIO_Mode_TypeDef>(_mode);
+    GPIO_InitStruct.AltFunc = (_mode == eMode::ALT_FUNC ? ENABLE : DISABLE);
 }
 
-inline void CPin::out_allow(eState _state){
-      GPIO_InitStruct.GPIO_Out = static_cast<GPIO_Out_TypeDef>(_state);
-}
-
+#pragma inline = forced
 inline void CPin::out_mode(eOutMode _outMode){
-    GPIO_InitStruct.GPIO_OutMode = static_cast<GPIO_OutMode_TypeDef>(_outMode);
+    GPIO_InitStruct.OutMode = static_cast<GPIO_OutMode_TypeDef>(_outMode);
 }
 
-inline void CPin::pullUp_set(eState _state){
-    GPIO_InitStruct.GPIO_PullUp = static_cast<GPIO_PullUp_TypeDef>(_state);
+#pragma inline = forced
+inline void CPin::in_mode(eInMode _inMode){
+    GPIO_InitStruct.InMode = static_cast<GPIO_InMode_TypeDef>(_inMode);
+}
+
+#pragma inline = forced
+inline void CPin::pull_mode(ePullMode _pullMode){
+    GPIO_InitStruct.PullMode = static_cast<GPIO_PullMode_TypeDef>(_pullMode);
+}
+
+#pragma inline = forced
+inline void CPin::drive_mode(eDriveMode _driveMode){
+    GPIO_InitStruct.DriveMode = static_cast<GPIO_DriveMode_TypeDef>(_driveMode);
 }
 
 
 #pragma inline = forced
 inline void CPin::write(bool _state){
-    GPIO_WriteBit(m_port, uint32_t(m_pin), _state ? Bit_SET :  Bit_CLEAR);
+    GPIO_WriteBit(m_port, uint32_t(m_pin), _state ? SET :  CLEAR);
 }
 
 #pragma inline = forced

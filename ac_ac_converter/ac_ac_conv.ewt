@@ -2729,46 +2729,49 @@
     <group>
         <name>STD_LIB</name>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_adc.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_adc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_bootflash.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_can.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_cap.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_dma.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_dma.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_ecap.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_extmem.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_gpio.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_gpio.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_i2c.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_irq.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_mflash.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_pwm.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_pmu.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_rcc.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_pwm.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_rtc.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_qep.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_timer.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_rcu.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_uart.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_spi.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_userflash.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_tmr.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\std_lib\Source\niietcm4_watchdog.c</name>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_uart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\std_lib\Source\plib035_wdt.c</name>
         </file>
     </group>
     <group>
@@ -2901,12 +2904,12 @@
         <name>$PROJ_DIR$\..\platform\retarget\retarget.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\..\platform\retarget\Template\K1921VK01T\retarget_conf.c</name>
+        <name>$PROJ_DIR$\..\platform\retarget\Template\K1921VK035\retarget_conf.c</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\..\platform\Device\NIIET\K1921VK01T\Source\IAR\startup_K1921VK01T.S</name>
+        <name>$PROJ_DIR$\..\platform\Device\NIIET\K1921VK035\Source\IAR\startup_K1921VK035.S</name>
     </file>
     <file>
-        <name>$PROJ_DIR$\..\platform\Device\NIIET\K1921VK01T\Source\system_K1921VK01T.c</name>
+        <name>$PROJ_DIR$\..\platform\Device\NIIET\K1921VK035\Source\system_K1921VK035.c</name>
     </file>
 </project>

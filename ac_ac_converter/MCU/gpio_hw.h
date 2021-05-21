@@ -8,7 +8,7 @@ extern "C" {
 // gpio for dsp platform 
 
 #include "config.h"
-#include "niietcm4_gpio.h"
+#include "plib035_gpio.h"
 
 //-------------------------------------------------------------------
 void gpio_hw_init(void);
@@ -27,11 +27,11 @@ void gpio_hw_deinit(void);
 //-------------------------------------------------------------------
 
 
-    #define RS485_1_TX_ON   GPIO_HIGH(NT_GPIOF, GPIO_Pin_9)
-    #define RS485_1_TX_OFF  GPIO_LOW(NT_GPIOF, GPIO_Pin_9)
+    #define RS485_1_TX_ON   GPIO_HIGH(GPIOB, GPIO_Pin_12)
+    #define RS485_1_TX_OFF  GPIO_LOW(GPIOB, GPIO_Pin_12)
 
-    #define RS485_2_TX_ON   GPIO_HIGH(NT_GPIOF, GPIO_Pin_8)
-    #define RS485_2_TX_OFF  GPIO_LOW(NT_GPIOF, GPIO_Pin_8)
+    #define RS485_2_TX_ON   GPIO_HIGH(GPIOB, GPIO_Pin_13)
+    #define RS485_2_TX_OFF  GPIO_LOW(GPIOB, GPIO_Pin_13)
 
 
 #ifdef __cplusplus

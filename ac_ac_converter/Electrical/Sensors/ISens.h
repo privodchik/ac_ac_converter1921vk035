@@ -6,7 +6,7 @@
 #define _ISENS_H
 
 #include "iqmath.h"
-#include "system_K1921VK01T.h"
+#include "system_K1921VK035.h"
 
 // resistances in kOhm 
 #define Uref (1.400)

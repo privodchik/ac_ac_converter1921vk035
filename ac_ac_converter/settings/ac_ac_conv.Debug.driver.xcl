@@ -6,11 +6,11 @@
 
 "-p" 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\config\debugger\NIIET\ioK1921BK01T.ddf" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\config\debugger\NIIET\K1921VK035.ddf" 
 
 "--semihosting" 
 
-"--device=K1921VK01T" 
+"--device=K1921VK035" 
 
 "--drv_communication=USB0" 
 

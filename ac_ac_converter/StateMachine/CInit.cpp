@@ -28,8 +28,8 @@ void CInit::operate(){
 void CInit::reset(){
 	IState::reset();
         app.errors.clr();
-        app.pwm_A.TZ_reset();
-        app.pwm_B.TZ_reset();
+        app.pwm_A.TZ_IT_reset();
+        app.pwm_B.TZ_IT_reset();
         
         __NVIC_ClearPendingIRQ(PWM0_TZ_IRQn);
         __NVIC_ClearPendingIRQ(PWM1_TZ_IRQn);
