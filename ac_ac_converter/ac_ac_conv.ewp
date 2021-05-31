@@ -2288,6 +2288,9 @@
             <name>$PROJ_DIR$\MCU\CADC.cpp</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\MCU\CCan.cpp</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\MCU\CPin.cpp</name>
         </file>
         <file>
